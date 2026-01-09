@@ -4,10 +4,10 @@ import { PROGRAMS } from "@/data/program";
 
 export function ProgramSection() {
   return (
-    <section id="program" className="py-28">
+    <section id="program" className="py-8">
       <div className="mx-auto max-w-7xl px-4">
         {/* HEADER */}
-        <div className="mb-20 grid grid-cols-1 gap-10 md:grid-cols-2">
+        <div className="mb-20 grid grid-cols-1 gap-10 md:grid-cols-2 text-center md:text-left cursor-default">
           <div>
             <span className="mb-3 block text-2xl font-bold text-blue-600">
               Kursus
@@ -18,7 +18,7 @@ export function ProgramSection() {
             </h2>
           </div>
 
-          <p className="max-w-md text-[16px] leading-[1.6] text-gray-500 md:pt-10">
+          <p className="mx-auto md:mx-0 max-w-md text-[16px] leading-[1.6] text-gray-500 md:pt-10">
             Program pembelajaran digital untuk anak yang dirancang agar belajar
             teknologi terasa seru dan mudah dipahami.
           </p>
@@ -32,6 +32,7 @@ export function ProgramSection() {
             width={520}
             height={520}
             priority
+            className="mx-auto"
           />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

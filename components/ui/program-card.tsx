@@ -26,16 +26,27 @@ export function ProgramCard({
     >
       <div
         className={cn(
-          "mb-4 flex h-10 w-10 items-center justify-center rounded-md transition-colors duration-300",
-          active ? "bg-white/20" : "bg-gray-100 group-hover:bg-white/20"
+          "mb-4 flex h-10 w-10 items-center justify-center rounded-md transition-all duration-300 bg-transparent",
         )}
       >
-        <Image src={icon} alt={title} width={24} height={24} />
+        <Image
+          src={icon}
+          alt={title}
+          width={24}
+          height={24}
+          className={cn(
+            "transition-all duration-300",
+            active
+              ? "scale-110 brightness-0 invert"
+              : "group-hover:scale-200 group-hover:brightness-0 group-hover:invert"
+          )}
+        />
       </div>
+
 
       <h3
         className={cn(
-          "mb-2 text-lg font-semibold transition-colors duration-300",
+          "mb-2 text-lg font-semibold transition-colors duration-300 cursor-default",
           active ? "text-white" : "group-hover:text-white"
         )}
       >
@@ -44,7 +55,7 @@ export function ProgramCard({
 
       <p
         className={cn(
-          "text-sm leading-[1.6] transition-colors duration-300",
+          "text-sm leading-[1.6] transition-colors duration-300 cursor-default",
           active ? "text-blue-100" : "text-gray-500 group-hover:text-blue-100"
         )}
       >

@@ -16,7 +16,7 @@ export const PROGRAMS: ProgramItem[] = [
     title: "Roblox Studio",
     description:
       "Kreasi game seru sambil belajar logika, kreativitas, dan problem solving di Roblox Studio.",
-    icon: "/assets/images/icon-game.svg",
+    icon: "/assets/images/icon-game-1.svg",
   },
   {
     title: "Digital Drawing",
