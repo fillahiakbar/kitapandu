@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export function DonationSection() {
   return (
-    <section className="py-28">
+    <section className="py-8 cursor-default">
       <div className="mx-auto max-w-7xl px-4">
         {/* TITLE */}
         <div className="mb-16 text-center">
@@ -16,14 +16,17 @@ export function DonationSection() {
         {/* CONTENT */}
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           {/* LEFT TEXT */}
-          <div className="max-w-lg">
-            <p className="mb-10 text-[16px] leading-[1.8] text-gray-600">
+          <div className="mx-auto max-w-lg text-center md:mx-0 md:text-left">
+            <p className="mx-auto mb-10 max-w-md text-[16px] leading-[1.8] text-gray-600 md:mx-0">
               Bantu kami memberikan pendidikan digital gratis untuk anak-anak
               berkebutuhan khusus agar mereka memiliki kesempatan yang sama
               dalam belajar teknologi.
             </p>
 
-            <Button>Donasi sekarang</Button>
+            <div className="flex justify-center md:justify-start">
+              <Button>Donasi sekarang</Button>
+            </div>
+
           </div>
 
           {/* RIGHT IMAGE */}
