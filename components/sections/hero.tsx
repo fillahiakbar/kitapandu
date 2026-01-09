@@ -8,7 +8,6 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-4 py-24 md:grid-cols-2">
-        {/* LEFT CONTENT */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
@@ -25,18 +24,14 @@ export function HeroSection() {
             baru sesuai kebutuhan industri.
           </p>
         </motion.div>
-
-        {/* RIGHT VISUAL */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="relative flex justify-center"
         >
-          {/* ELLIPSE BACKGROUND */}
+        
           <div className="absolute bottom-0 right-0 -z-10 h-[420px] w-[420px] rounded-full bg-blue-600 md:h-[520px] md:w-[520px]" />
-
-          {/* STAR ASSET */}
           <Image
             src="/assets/images/bintang.png"
             alt="Dekorasi bintang"
@@ -45,8 +40,6 @@ export function HeroSection() {
             className="absolute right-0 top-10"
             priority
           />
-
-          {/* MAIN CHARACTER */}
           <Image
             src="/assets/images/assets1.png"
             alt="Ilustrasi anak belajar digital"
