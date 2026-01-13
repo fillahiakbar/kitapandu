@@ -2,10 +2,13 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 
+import Link from "next/link";
+
 type ProgramCardProps = {
   title: string;
   description: string;
   icon: string;
+  slug?: string;
   active?: boolean;
 };
 
@@ -13,13 +16,14 @@ export function ProgramCard({
   title,
   description,
   icon,
+  slug,
   active = false,
 }: ProgramCardProps) {
-  return (
+  const content = (
     <div
       className={cn(
-        "group rounded-2xl p-6 transition-all duration-300 ease-out",
-        "hover:scale-[1.03] hover:-translate-y-1",
+        "group rounded-2xl p-6 transition-all duration-300 ease-out h-[250px] flex flex-col justify-between",
+        "hover:scale-[1.03] hover:-translate-y-1 shadow-md",
         active
           ? "bg-blue-600 text-white shadow-[0_20px_60px_rgba(59,130,246,0.35)]"
           : "bg-white shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:bg-blue-600 hover:shadow-[0_20px_60px_rgba(59,130,246,0.35)]"
@@ -36,10 +40,10 @@ export function ProgramCard({
           width={24}
           height={24}
           className={cn(
-            "transition-all duration-300",
+            "transition-all duration-300 scale-200",
             active
-              ? "scale-110 brightness-0 invert"
-              : "group-hover:scale-200 group-hover:brightness-0 group-hover:invert"
+              ? "brightness-0 invert"
+              : "group-hover:scale-250 group-hover:brightness-0 group-hover:invert"
           )}
         />
       </div>
@@ -64,4 +68,17 @@ export function ProgramCard({
       </p>
     </div>
   );
+
+  if (slug) {
+    return (
+      <Link
+        href={`/program/${slug}`}
+        className="block h-full cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }

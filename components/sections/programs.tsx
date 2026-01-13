@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { ProgramCard } from "@/components/ui/program-card";
 import { PROGRAMS } from "@/data/program";
-import Link from "next/link";
 
 export function ProgramSection() {
   return (
@@ -26,25 +25,19 @@ export function ProgramSection() {
         </div>
 
         {/* CONTENT */}
-        <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 item-center">
           <Image
             src="/assets/images/assets2.png"
             alt="Ilustrasi program belajar digital"
-            width={520}
-            height={520}
+            width={552}
+            height={441}
             priority
-            className="mx-auto"
+            className="mx-auto md:col-span-4"
           />
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="md:col-span-8 grid grid-cols-1 gap-6 sm:grid-cols-3 items-stretch">
             {PROGRAMS.map((program) => (
-              <Link
-                key={program.slug}
-                href={`/program/${program.slug}`}
-                className="block cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <ProgramCard {...program} />
-              </Link>
+              <ProgramCard key={program.slug} {...program} slug={program.slug} />
             ))}
           </div>
         </div>
