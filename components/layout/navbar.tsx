@@ -11,8 +11,9 @@ export function Navbar() {
 
   const navItems = [
     { label: "Beranda", href: "/" },
-    { label: "Kursus", href: "/program" },
-    { label: "Tentang Kami", href: "/#about" },
+    { label: "Program", href: "/program" },
+    { label: "Jadwal", href: "/jadwal" },
+    { label: "Donasi", href: "/donasi" },
     { label: "FAQs", href: "/#faq" },
   ];
 
