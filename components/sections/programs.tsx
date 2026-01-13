@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ProgramCard } from "@/components/ui/program-card";
 import { PROGRAMS } from "@/data/program";
+import Link from "next/link";
 
 export function ProgramSection() {
   return (
@@ -37,7 +38,13 @@ export function ProgramSection() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {PROGRAMS.map((program) => (
-              <ProgramCard key={program.title} {...program} />
+              <Link
+                key={program.slug}
+                href={`/program/${program.slug}`}
+                className="block cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                <ProgramCard {...program} />
+              </Link>
             ))}
           </div>
         </div>
