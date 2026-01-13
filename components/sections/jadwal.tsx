@@ -68,14 +68,14 @@ export function JadwalSection() {
                     </div>
 
                     <div className="flex items-center justify-center">
-                        <div className="relative h-75 w-full overflow-hidden">
-                            <div className="absolute right-0 -bottom-30 transform -rotate-45 scale-110">
+                        <div className="relative h-60 sm:h-72 md:h-75 w-full overflow-hidden">
+                            <div className="absolute -right-8 -bottom-38 sm:-bottom-28 md:-bottom-30 transform -rotate-45 scale-95 sm:scale-110 p-2">
                                 <Image
                                     src="/assets/images/hand.png"
                                     alt="hand"
                                     width={520}
                                     height={520}
-                                    className="object-contain"
+                                    className="object-contain w-full max-w-[520px]"
                                 />
                             </div>
                         </div>
