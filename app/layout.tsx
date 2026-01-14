@@ -2,11 +2,13 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { AntdProvider } from "@/providers/antd-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-poppins",
+  display: "swap",
 });
 
 export const metadata = {
@@ -33,11 +35,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={poppins.variable}>
-      <body className="font-sans">
-        <Navbar />
-
-        {children}
-        <Footer />
+      <body className="font-sans antialiased">
+        <AntdProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AntdProvider>
       </body>
     </html>
   );
