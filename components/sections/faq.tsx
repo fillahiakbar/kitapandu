@@ -11,7 +11,7 @@ export function FAQSection() {
           <div className="text-center md:text-left">
             <h2 className="mb-6 text-[48px] font-bold leading-none">FAQs</h2>
 
-            <p className="mx-auto mb-10 max-w-sm text-sm leading-[1.8] text-gray-600 md:mx-0">
+            <p className="mx-auto mb-10 max-w-sm text-sm leading-[1.8] text-gray-600 md:mx-0 font-bold">
               Explore A Wide Range Of Professional Courses Designed To Help You
               Grow, Learn, And Succeed.
             </p>
@@ -21,7 +21,6 @@ export function FAQSection() {
             </div>
           </div>
 
-          {/* RIGHT ACCORDION */}
           {/* RIGHT ACCORDION */}
           <div className="mx-auto flex max-w-xl flex-col gap-6 md:mx-0">
             {FAQS.map((item, index) => (
