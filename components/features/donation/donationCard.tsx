@@ -9,6 +9,7 @@ type Donation = {
     description: string;
     image: string;
     collected: number;
+    target:number;
     progress: number;
     status: "open" | "upcoming" | "selesai";
     slug: string;
@@ -79,15 +80,16 @@ const DonationCard: React.FC<Props> = ({ donation }) => {
                         {donation.description}
                     </p>
 
-                    <p className="text-sm mt-4">
-                        Terkumpul:{" "}
-                        <span className="font-semibold text-blue-600">
-                            Rp {donation.collected.toLocaleString("id-ID")}
-                        </span>
+                    <p className="text-lg mt-4 font-semibold text-blue-600">
+                        Rp {donation.collected.toLocaleString("id-ID")}
+                    </p>
+
+                    <p className="text-sm text-gray-400 line-clamp-3">
+                        Terkumpul dari Rp {donation.target.toLocaleString("id-ID")}
                     </p>
 
                     {/* Progress */}
-                    <div className="mt-3 flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div
                                 className="h-full bg-blue-600 transition-all"
