@@ -56,7 +56,7 @@ const DonationCard: React.FC<Props> = ({ donation }) => {
     );
 
     return (
-        <div className="flex bg-white rounded-xl shadow-lg overflow-hidden p-6">
+        <div className="flex bg-white rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.15)] overflow-hidden p-6">
             {/* Image */}
             <div className="relative w-1/3 min-h-[140px]">
                 <Image

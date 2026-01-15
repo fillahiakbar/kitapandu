@@ -26,7 +26,7 @@ export function ProgramCard({
         "hover:scale-[1.03] hover:-translate-y-1 shadow-md",
         active
           ? "bg-blue-600 text-white shadow-[0_20px_60px_rgba(59,130,246,0.35)]"
-          : "bg-white shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:bg-blue-600 hover:shadow-[0_20px_60px_rgba(59,130,246,0.35)]"
+          : "bg-white shadow-[0_0_10px_rgba(0,0,0,0.15)] hover:bg-blue-600 hover:shadow-[0_20px_60px_rgba(59,130,246,0.35)]"
       )}
     >
       <div
