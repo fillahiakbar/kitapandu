@@ -25,7 +25,7 @@ export function JadwalSection() {
                 </div>
 
                 {/* Input form */}
-                <form className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <form className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center mb-45">
                     <input
                         type="text"
                         name="nomorAbsen"
@@ -40,47 +40,6 @@ export function JadwalSection() {
                         Lihat Jadwal
                     </button>
                 </form>
-
-                {/* QR + Image area */}
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3 shadow-xl rounded-md">
-                    <div className="flex items-center justify-center p-6">
-                        <div className="flex h-56 w-56 items-center justify-center bg-gray-50 text-gray-400">
-                            {/* Temporary */}
-                            <Image
-                                src="/assets/images/qrcode.png"
-                                alt="placeholder"
-                                width={300}
-                                height={300}
-                                className="object-contain"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-center p-6">
-                        <div className="grid grid-rows-2">
-                            <h1 className="text-3xl md:text-4xl font-bold leading-tight mt-1">
-                                Scan QR Code
-                            </h1>
-                            <p className="mt-3 max-w-2xl text-sm text-gray-800">
-                                Untuk melihat jadwal anak secara cepat dan mudah
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-center">
-                        <div className="relative h-60 sm:h-72 md:h-75 w-full overflow-hidden">
-                            <div className="absolute -right-8 -bottom-38 sm:-bottom-28 md:-bottom-30 transform -rotate-45 scale-95 sm:scale-110 p-2">
-                                <Image
-                                    src="/assets/images/hand.png"
-                                    alt="hand"
-                                    width={520}
-                                    height={520}
-                                    className="object-contain w-full max-w-[520px]"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     );
