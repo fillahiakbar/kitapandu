@@ -14,7 +14,7 @@ export function Navbar() {
     { label: "Beranda", href: "/" },
     { label: "Program", href: "/program" },
     { label: "Jadwal", href: "/jadwal" },
-    { label: "Donasi", href: "/donasi" },
+    { label: "Donasi", href: "/donation" },
     {
       label: "Informasi",
       href: "#",
