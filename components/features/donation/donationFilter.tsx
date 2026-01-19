@@ -11,8 +11,8 @@ type Props = {
 
 const tabs: { label: string; value: TabValue }[] = [
     { label: "Donasi Terbuka", value: "open" },
-    { label: "Donasi Akan Datang", value: "upcoming" },
     { label: "Donasi Selesai", value: "selesai" },
+    { label: "Donasi Akan Datang", value: "upcoming" },
 ];
 
 export default function DonationFilter({ value, onChange }: Props) {

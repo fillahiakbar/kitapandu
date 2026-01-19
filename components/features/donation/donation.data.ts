@@ -1,17 +1,5 @@
-export type DonationStatus = "open" | "upcoming" | "selesai";
-
-export interface Donation {
-    id: number;
-    name: string;
-    description: string;
-    collected: number;
-    target: number;
-    progress: number; // 0 - 100
-    status: DonationStatus;
-    image: string;
-    slug: string;
-    actionUrl?: string;
-}
+import { Donation } from "./donation.types";
+import { donationAllocations } from "./donationAllocation.data";
 
 export const donationData: Donation[] = [
     // =====================
@@ -104,6 +92,7 @@ export const donationData: Donation[] = [
         status: "selesai",
         image: "/assets/images/donations/donation.jpg",
         slug: "bantuan-gempa-bumi",
+        allocations: donationAllocations.filter(a => a.donationId === 7),
     },
     {
         id: 8,
@@ -115,6 +104,7 @@ export const donationData: Donation[] = [
         status: "selesai",
         image: "/assets/images/donations/donation.jpg",
         slug: "operasi-gratis",
+        allocations: donationAllocations.filter(a => a.donationId === 8),
     },
     {
         id: 9,

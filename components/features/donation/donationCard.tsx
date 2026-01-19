@@ -2,25 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
-type Donation = {
-    id: number;
-    name: string;
-    description: string;
-    image: string;
-    collected: number;
-    target:number;
-    progress: number;
-    status: "open" | "upcoming" | "selesai";
-    slug: string;
-    actionUrl?: string;
-};
+import { Donation } from "./donation.types";
 
 type Props = {
     donation: Donation;
+    onDetail?: (donation: Donation) => void;
 };
 
-const DonationCard: React.FC<Props> = ({ donation }) => {
+const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
     const safeProgress = Math.min(100, Math.max(0, donation.progress));
 
     const isOpen = donation.status === "open";
@@ -33,16 +22,22 @@ const DonationCard: React.FC<Props> = ({ donation }) => {
             ? "Detail Donasi"
             : "Segera Hadir";
 
-    const href = isOpen
-        ? donation.actionUrl
-        : isSelesai
-            ? `/donation/${donation.slug}`
+    const href =
+        isOpen && donation.actionUrl
+            ? donation.actionUrl
             : undefined;
+
+    const handleClick = () => {
+        if (isSelesai && onDetail) {
+            onDetail(donation);
+        }
+    };
 
     const isExternal = isOpen;
 
     const Button = (
         <button
+            onClick={handleClick}
             disabled={isUpcoming}
             className={`
         mt-5 w-fit px-5 py-2 rounded-lg text-sm font-medium transition
