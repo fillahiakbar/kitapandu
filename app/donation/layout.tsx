@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ProgramsLayout({
+export default function DonasiLayout({
     children,
 }: {
     children: React.ReactNode;
