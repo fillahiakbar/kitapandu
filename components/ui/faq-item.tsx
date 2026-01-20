@@ -22,7 +22,7 @@ export function FAQItem({
         "rounded-2xl p-6 transition-all duration-300",
         open
           ? "bg-blue-600 text-white"
-          : "bg-white shadow-[0_10px_40px_rgba(0,0,0,0.06)]"
+          : "bg-white shadow-[0_0_10px_rgba(0,0,0,0.15)]"
       )}
     >
       <button
