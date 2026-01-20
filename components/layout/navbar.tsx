@@ -20,7 +20,7 @@ export function Navbar() {
       href: "#",
       children: [
         { label: "Pengumuman", href: "#/pengumuman" },
-        { label: "Kalendar Akademik", href: "#/kalendar" },
+        { label: "Kalendar Akademik", href: "/kalendar" },
         { label: "FAQs", href: "#/faqs" },
         { label: "Tentang Kami", href: "#/tentangkami" },
       ],
