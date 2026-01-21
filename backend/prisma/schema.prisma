@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//////////////////////
+// ENUMS
+//////////////////////
+
+enum AnnouncementCategory {
+  jadwal
+  libur
+  event
+  umum
+}
+
+enum DonationStatus {
+  open
+  finished
+  upcoming
+}
+
+enum EnrollmentStatus {
+  registered
+  confirmed
+  active
+  dropped
+  rejected
+  completed
+}
+
+enum ClassStatus {
+  active
+  inactive
+}
+
+//////////////////////
+// MODELS
+//////////////////////
+
+model Announcements {
+  announcements_id String   @id @default(uuid()) @db.Char(36)
+  title            String
+  category         AnnouncementCategory
+  content          String   @db.Text
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model Donation {
+  donation_id        String               @id @default(uuid()) @db.Char(36)
+  title              String
+  status             DonationStatus
+  target_amount      Int
+  collected_amount   Int
+  percent            Int
+  google_form_url    String               @db.Text
+  start_date         DateTime @db.Date
+  end_date           DateTime @db.Date
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  allocations        DonationAllocation[]
+}
+
+model DonationAllocation {
+  donation_allocation_id String   @id @default(uuid()) @db.Char(36)
+  donation_id            String   @db.Char(36)
+  title                  String
+  amount                 Int
+  percent                Int
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  donation Donation @relation(fields: [donation_id], references: [donation_id], onDelete: Cascade)
+}
+
+model Students {
+  student_id   String   @id @default(uuid()) @db.Char(36)
+  student_name String
+  student_age  Int
+  parent_name  String
+  whatsapp     String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  enrollments  Enrollments[]
+}
+
+model Programs {
+  program_id  String   @id @default(uuid()) @db.Char(36)
+  name        String
+  description String   @db.Text
+  icon        String?
+  image       String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  classes     Classes[]
+}
+
+model Mentors {
+  mentor_id  String   @id @default(uuid()) @db.Char(36)
+  name       String
+  contact    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  classes    Classes[]
+}
+
+model Classes {
+  class_id   String      @id @default(uuid()) @db.Char(36)
+  program_id String      @db.Char(36)
+  mentor_id  String      @db.Char(36)
+  name       String
+  age_range  String
+  period     String
+  status     ClassStatus
+  image      String?
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+
+  program    Programs    @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  mentor     Mentors     @relation(fields: [mentor_id], references: [mentor_id], onDelete: Cascade)
+  enrollments Enrollments[]
+  schedules   Schedules[]
+
+  @@index([program_id])
+  @@index([mentor_id])
+}
+
+model Enrollments {
+  enrollment_id String           @id @default(uuid()) @db.Char(36)
+  student_id    String           @db.Char(36)
+  class_id      String           @db.Char(36)
+  status        EnrollmentStatus
+  register_at   DateTime
+  confirmed_at  DateTime
+  started_at    DateTime
+  ended_at      DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  student Students @relation(fields: [student_id], references: [student_id], onDelete: Cascade)
+  class   Classes  @relation(fields: [class_id], references: [class_id], onDelete: Cascade)
+
+  @@unique([student_id, class_id])
+  @@index([student_id])
+  @@index([class_id])
+}
+
+model Schedules {
+  schedule_id String   @id @default(uuid()) @db.Char(36)
+  class_id    String   @db.Char(36)
+  date        DateTime @db.Date
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  class Classes @relation(fields: [class_id], references: [class_id], onDelete: Cascade)
+
+  @@unique([class_id, date])
+  @@index([class_id])
+}
