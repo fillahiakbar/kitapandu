@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { createAnnouncementSchema, updateAnnouncementSchema } from '../validators/announcements';
 import { ZodError } from 'zod';
-import prisma from '../lib/prisma';
+import {prisma} from '../lib/prisma';
 
 const router = Router();
 
@@ -13,7 +13,11 @@ router.get('/', async (req: Request, res: Response) => {
     });
     res.json(announcements);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch announcements' });
+    console.error('Error fetching announcements:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch announcements',
+      details: error instanceof Error ? error.message : String(error)
+    });
   }
 });
 
