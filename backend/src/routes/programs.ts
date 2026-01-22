@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { createProgramSchema, updateProgramSchema } from '../validators/programs';
 import { ZodError } from 'zod';
-import prisma from '../lib/prisma';
+import {prisma} from '../lib/prisma';
 
 const router = Router();
 

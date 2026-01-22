@@ -5,7 +5,7 @@ import {
   createDonationAllocationSchema,
 } from '../validators/donations';
 import { ZodError } from 'zod';
-import prisma from '../lib/prisma';
+import {prisma} from '../lib/prisma';
 
 const router = Router();
 
