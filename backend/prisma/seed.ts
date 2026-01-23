@@ -1,9 +1,53 @@
+import "dotenv/config"
 import { PrismaClient } from "@prisma/client"
+import { adapter } from "../src/helper/adapter"
+import bcrypt from "bcrypt"
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
     console.log("🌱 Seeding database...")
+
+    const passwordHash = await bcrypt.hash("password123", 10)
+
+    // ======================
+    // Users
+    // ======================
+
+    await prisma.user.upsert({
+        where: { email: "admin@kitapandu.com" },
+        update: {},
+        create: {
+            email: "admin@kitapandu.com",
+            name: "System Admin",
+            password: passwordHash,
+            role: "admin",
+        },
+    })
+
+    // OPERATOR 1
+    await prisma.user.upsert({
+        where: { email: "operator1@kitapandu.com" },
+        update: {},
+        create: {
+            email: "operator1@kitapandu.com",
+            name: "Operator One",
+            password: passwordHash,
+            role: "operator",
+        },
+    })
+
+    // OPERATOR 2
+    await prisma.user.upsert({
+        where: { email: "operator2@kitapandu.com" },
+        update: {},
+        create: {
+            email: "operator2@kitapandu.com",
+            name: "Operator Two",
+            password: passwordHash,
+            role: "operator",
+        },
+    })
 
     // ======================
     // ANNOUNCEMENTS
