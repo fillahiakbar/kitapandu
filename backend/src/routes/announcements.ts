@@ -1,23 +1,47 @@
 import { Router, Request, Response } from 'express';
 import { createAnnouncementSchema, updateAnnouncementSchema } from '../validators/announcements';
 import { ZodError } from 'zod';
-import {prisma} from '../lib/prisma';
+import { prisma } from '../lib/prisma';
+import { authMiddleware } from '../middleware/auth';
+import { paginatedResponse, errorResponse } from '../helper/apiResponse';
 
 const router = Router();
 
 // Get all announcements
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const announcements = await prisma.announcements.findMany({
-      orderBy: { created_at: 'desc' },
-    });
-    res.json(announcements);
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.min(
+      Math.max(Number(req.query.limit) || 10, 1),
+      100
+    );
+
+    const [announcements, totalItems] = await Promise.all([
+      prisma.announcements.findMany({
+        orderBy: { created_at: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.announcements.count(),
+    ]);
+
+    return paginatedResponse(
+      res,
+      announcements,
+      {
+        page,
+        limit,
+        totalItems,
+      },
+      "Announcements fetched successfully"
+    );
   } catch (error) {
-    console.error('Error fetching announcements:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch announcements',
-      details: error instanceof Error ? error.message : String(error)
-    });
+    return errorResponse(
+      res, 
+      "Failed to fetch announcement", 
+      500, 
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
@@ -37,8 +61,8 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Create announcement
-router.post('/', async (req: Request, res: Response) => {
+// Create announcement (protected)
+router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = createAnnouncementSchema.parse(req.body);
     const announcement = await prisma.announcements.create({
@@ -54,8 +78,8 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// Update announcement
-router.put('/:id', async (req: Request, res: Response) => {
+// Update announcement (protected)
+router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = updateAnnouncementSchema.parse(req.body);
     const announcement = await prisma.announcements.update({
@@ -72,8 +96,8 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Delete announcement
-router.delete('/:id', async (req: Request, res: Response) => {
+// Delete announcement (protected)
+router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     await prisma.announcements.delete({
       where: { announcements_id: req.params.id },

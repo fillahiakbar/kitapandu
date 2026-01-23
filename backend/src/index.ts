@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 
+import authRouter from "./routes/auth"
 import announcementsRouter from "./routes/announcements"
 import donationsRouter from "./routes/donations"
 import programsRouter from "./routes/programs"
@@ -22,6 +23,7 @@ app.get("/api/health", (_req, res) => {
 })
 
 // API Routes
+app.use("/api/auth", authRouter)
 app.use("/api/announcements", announcementsRouter)
 app.use("/api/donations", donationsRouter)
 app.use("/api/programs", programsRouter)
