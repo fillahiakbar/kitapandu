@@ -1,84 +1,159 @@
 import { Router, Request, Response } from 'express';
-import { createStudentSchema, updateStudentSchema } from '../validators/students';
+import {
+  createStudentSchema,
+  updateStudentSchema,
+} from '../validators/students';
 import { ZodError } from 'zod';
-import {prisma} from '../lib/prisma';
+import { prisma } from '../lib/prisma';
+import {
+  successResponse,
+  errorResponse,
+} from '../helper/apiResponse';
+import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-// Get all students
-router.get('/', async (req: Request, res: Response) => {
+/**
+ * Get all students (auth required)
+ */
+router.get('/', authMiddleware, async (_req: Request, res: Response) => {
   try {
     const students = await prisma.students.findMany({
       include: { enrollments: true },
       orderBy: { created_at: 'desc' },
     });
-    res.json(students);
+
+    return successResponse(
+      res,
+      students,
+      'Students fetched successfully'
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch students' });
+    return errorResponse(
+      res,
+      'Failed to fetch students',
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
-// Get student by ID
+/**
+ * Get student by ID (PUBLIC)
+ */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const student = await prisma.students.findUnique({
       where: { student_id: req.params.id },
-      include: { enrollments: { include: { class: true } } },
+      include: {
+        enrollments: {
+          include: { class: true },
+        },
+      },
     });
+
     if (!student) {
-      res.status(404).json({ error: 'Student not found' });
-      return;
+      return errorResponse(res, 'Student not found', 404);
     }
-    res.json(student);
+
+    return successResponse(
+      res,
+      student,
+      'Student fetched successfully'
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch student' });
+    return errorResponse(
+      res,
+      'Failed to fetch student',
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
-// Create student
-router.post('/', async (req: Request, res: Response) => {
+/**
+ * Create student (auth required)
+ */
+router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = createStudentSchema.parse(req.body);
+
     const student = await prisma.students.create({
       data: body,
     });
-    res.status(201).json(student);
+
+    return successResponse(
+      res,
+      student,
+      'Student created successfully',
+      201
+    );
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors });
-      return;
+      return errorResponse(res, 'Validation failed', 400, error.errors);
     }
-    res.status(500).json({ error: 'Failed to create student' });
+
+    return errorResponse(
+      res,
+      'Failed to create student',
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
-// Update student
-router.put('/:id', async (req: Request, res: Response) => {
+/**
+ * Update student (auth required)
+ */
+router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = updateStudentSchema.parse(req.body);
+
     const student = await prisma.students.update({
       where: { student_id: req.params.id },
       data: body,
     });
-    res.json(student);
+
+    return successResponse(
+      res,
+      student,
+      'Student updated successfully'
+    );
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors });
-      return;
+      return errorResponse(res, 'Validation failed', 400, error.errors);
     }
-    res.status(500).json({ error: 'Failed to update student' });
+
+    return errorResponse(
+      res,
+      'Failed to update student',
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
-// Delete student
-router.delete('/:id', async (req: Request, res: Response) => {
+/**
+ * Delete student (auth required)
+ */
+router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     await prisma.students.delete({
       where: { student_id: req.params.id },
     });
-    res.json({ message: 'Student deleted successfully' });
+
+    return successResponse(
+      res,
+      null,
+      'Student deleted successfully'
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete student' });
+    return errorResponse(
+      res,
+      'Failed to delete student',
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 

@@ -3,7 +3,7 @@ import { createAnnouncementSchema, updateAnnouncementSchema } from '../validator
 import { ZodError } from 'zod';
 import { prisma } from '../lib/prisma';
 import { authMiddleware } from '../middleware/auth';
-import { paginatedResponse, errorResponse } from '../helper/apiResponse';
+import { paginatedResponse, errorResponse, successResponse } from '../helper/apiResponse';
 
 const router = Router();
 
@@ -16,14 +16,23 @@ router.get('/', async (req: Request, res: Response) => {
       100
     );
 
-    const [announcements, totalItems] = await Promise.all([
-      prisma.announcements.findMany({
-        orderBy: { created_at: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-      prisma.announcements.count(),
-    ]);
+    const totalItems = await prisma.announcements.count();
+
+    // 404 error code
+    if (totalItems === 0) {
+      return errorResponse(
+        res,
+        "No announcements found",
+        404,
+        null
+      );
+    }
+
+    const announcements = await prisma.announcements.findMany({
+      orderBy: { created_at: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
     return paginatedResponse(
       res,
@@ -37,9 +46,9 @@ router.get('/', async (req: Request, res: Response) => {
     );
   } catch (error) {
     return errorResponse(
-      res, 
-      "Failed to fetch announcement", 
-      500, 
+      res,
+      "Failed to fetch announcement",
+      500,
       error instanceof Error ? error.message : error
     );
   }
@@ -51,13 +60,26 @@ router.get('/:id', async (req: Request, res: Response) => {
     const announcement = await prisma.announcements.findUnique({
       where: { announcements_id: req.params.id },
     });
+
     if (!announcement) {
-      res.status(404).json({ error: 'Announcement not found' });
-      return;
+      return errorResponse(
+        res,
+        "No announcements found",
+        404,
+        null
+      )
     }
-    res.json(announcement);
+    return successResponse(
+      res,
+      announcement
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch announcement' });
+    return errorResponse(
+      res,
+      "Failed to fetch announcement",
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
@@ -68,13 +90,26 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
     const announcement = await prisma.announcements.create({
       data: body,
     });
-    res.status(201).json(announcement);
+    return successResponse(
+      res,
+      announcement,
+      "Announcement created successfully"
+    );
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors });
-      return;
+      return errorResponse(
+        res,
+        "validation failed",
+        400,
+        error.errors
+      );
     }
-    res.status(500).json({ error: 'Failed to create announcement' });
+    return errorResponse(
+      res,
+      "Failed to create announcement",
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
@@ -86,13 +121,26 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
       where: { announcements_id: req.params.id },
       data: body,
     });
-    res.json(announcement);
+    return successResponse(
+      res,
+      announcement,
+      "Announcement updated successfully"
+    );
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors });
-      return;
+      return errorResponse(
+        res,
+        "Validation failed",
+        400,
+        error.errors
+      );
     }
-    res.status(500).json({ error: 'Failed to update announcement' });
+    return errorResponse(
+      res,
+      "Failed to update announcement",
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 
@@ -102,9 +150,18 @@ router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
     await prisma.announcements.delete({
       where: { announcements_id: req.params.id },
     });
-    res.json({ message: 'Announcement deleted successfully' });
+    return successResponse(
+      res,
+      null,
+      "Announcement deleted successfully"
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete announcement' });
+    return errorResponse(
+      res,
+      "Failed to delete announcement",
+      500,
+      error instanceof Error ? error.message : error
+    );
   }
 });
 

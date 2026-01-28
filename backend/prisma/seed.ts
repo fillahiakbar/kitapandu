@@ -158,6 +158,7 @@ async function main() {
             collected_amount: 2500000,
             percent: 25,
             google_form_url: "https://forms.gle/example",
+            image:"/donation.jpg",
             start_date: new Date("2025-01-01"),
             end_date: new Date("2025-03-01"),
         },
