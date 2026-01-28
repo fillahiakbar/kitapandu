@@ -17,8 +17,13 @@ import { R } from 'framer-motion/dist/types.d-a9pt5qxk';
 const router = Router();
 
 /**
- * Get all donations (paginated)
+ * GET /
+ * Fetches a paginated list of donations ordered by newest first.
+ * Supports `page` and `limit` query parameters.
+ * Includes related allocation data.
+ * Returns 404 if no donations are found and handles server errors.
  */
+
 router.get('/', async (req: Request, res: Response) => {
   try {
     const page = Math.max(Number(req.query.page) || 1, 1);
@@ -54,8 +59,13 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * Get donation by ID
+ * GET /:id
+ * Fetches a single donation by its unique ID.
+ * Includes related allocation data.
+ * Returns 404 if the donation is not found.
+ * Handles server errors gracefully.
  */
+
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const donation = await prisma.donation.findUnique({
@@ -79,8 +89,14 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * Create donation
+ * POST /
+ * Creates a new donation record.
+ * Requires authentication and validates input using Zod.
+ * Initializes collected amount and progress percentage to zero.
+ * Returns the created donation with related allocations on success.
+ * Handles validation and server errors.
  */
+
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = createDonationSchema.parse(req.body);
@@ -115,8 +131,13 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Update donation
+ * PUT /:id
+ * Updates an existing donation by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated donation with related allocations on success.
+ * Handles validation and server errors.
  */
+
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = updateDonationSchema.parse(req.body);
@@ -146,7 +167,11 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Delete donation
+ * DELETE /:id
+ * Deletes a donation by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -170,8 +195,13 @@ router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 
-// Donation allocations 
-
+/**
+ * GET /:id/allocations
+ * Fetches a paginated list of allocations for the specified donation ID.
+ * Requires authentication and supports `page` and `limit` query parameters.
+ * Returns 404 if no allocations exist for the given donation.
+ * Handles server errors gracefully.
+ */
 router.get('/:id/allocations', authMiddleware, async (req: Request, res: Response) => {
   try {
     const page = Math.max(Number(req.query.page) || 1, 1);
@@ -205,6 +235,13 @@ router.get('/:id/allocations', authMiddleware, async (req: Request, res: Respons
   }
 });
 
+/**
+ * GET /:donationId/allocations/:allocationId
+ * Fetches a single allocation by its unique allocation ID
+ * under a specific donation.
+ * Returns 404 if the allocation is not found.
+ * Handles server errors gracefully.
+ */
 router.get('/:id/allocations/:id', async (req: Request, res: Response) => {
   try {
     const allocation = await prisma.donationAllocation.findUnique({
@@ -227,7 +264,12 @@ router.get('/:id/allocations/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * Create donation allocation
+ * POST /:donationId/allocations
+ * Creates one or more allocations for a specific donation.
+ * Requires authentication and validates input using Zod.
+ * Verifies the donation exists, calculates allocation percentages
+ * when not provided, and ensures total allocation does not exceed 100%.
+ * Returns the created allocations or appropriate validation/server errors.
  */
 router.post(
   '/:id/allocations/',
@@ -292,8 +334,12 @@ router.post(
 );
 
 /**
- * Update donation allocation
- * PUT /donations/:donationId/allocations/:allocationId
+ * PUT /:donationId/allocations/:allocationId
+ * Updates an existing allocation for a specific donation.
+ * Requires authentication and validates input using Zod.
+ * Ensures both the donation and allocation exist.
+ * Recalculates allocation percentage when amount or percent is updated.
+ * Returns the updated allocation or appropriate errors.
  */
 router.put(
   '/:donationId/allocations/:allocationId',
@@ -353,8 +399,11 @@ router.put(
 );
 
 /**
- * Delete donation allocation
- * DELETE /donations/:donationId/allocations/:allocationId
+ * DELETE /:donationId/allocations/:allocationId
+ * Deletes a specific allocation from a donation.
+ * Requires authentication and verifies the allocation exists.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete(
   '/:donationId/allocations/:allocationId',

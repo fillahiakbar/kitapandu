@@ -14,7 +14,12 @@ import { authMiddleware } from '../middleware/auth';
 const router = Router();
 
 /**
- * Get all students (auth required)
+ * GET /
+ * Fetches a list of all students.
+ * Requires authentication.
+ * Includes related enrollment data for each student.
+ * Returns students ordered by newest first.
+ * Handles server errors gracefully.
  */
 router.get('/', authMiddleware, async (_req: Request, res: Response) => {
   try {
@@ -39,7 +44,11 @@ router.get('/', authMiddleware, async (_req: Request, res: Response) => {
 });
 
 /**
- * Get student by ID (PUBLIC)
+ * GET /:id
+ * Fetches a single student by its unique ID.
+ * Includes enrollments with related class details.
+ * Returns 404 if the student is not found.
+ * Handles server errors gracefully.
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -72,7 +81,11 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * Create student (auth required)
+ * POST /
+ * Creates a new student record.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created student with a 201 status code on success.
+ * Handles validation and server errors.
  */
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -103,7 +116,11 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Update student (auth required)
+ * PUT /:id
+ * Updates an existing student by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated student on success.
+ * Handles validation and server errors.
  */
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -134,7 +151,11 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Delete student (auth required)
+ * DELETE /:id
+ * Deletes a student by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {

@@ -11,8 +11,11 @@ import { requiredAdmin, authMiddleware } from '../middleware/auth';
 const router = Router();
 
 /**
- * Login route - authenticate user and return JWT token
- * POST /api/auth/login
+ * POST /login
+ * Authenticates a user using email and password.
+ * Validates request body with Zod, checks user existence and active status,
+ * verifies password using bcrypt, and generates a JWT on success.
+ * Returns user info and token, or appropriate auth/validation errors.
  */
 router.post('/login', async (req: Request, res: Response) => {
   try {
@@ -92,8 +95,11 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 /**
- * Logout route
- * POST /api/auth/logout
+ * POST /logout
+ * Logs out the authenticated user by invalidating the current JWT.
+ * Extracts the token from the Authorization header, retrieves its JTI
+ * and expiration, and adds it to a blacklist for audit and revocation.
+ * Returns a success message or handles server errors.
  */
 router.post('/logout', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -123,7 +129,13 @@ router.post('/logout', authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-// create a new user
+/**
+ * POST /signup
+ * Creates a new user account.
+ * Restricted to admin users and validates input using Zod.
+ * Hashes the password before persisting the user.
+ * Returns the created user’s public details or appropriate errors.
+ */
 router.post('/signup', requiredAdmin, async (req, res) => {
   try {
     const body = signupSchema.parse(req.body);

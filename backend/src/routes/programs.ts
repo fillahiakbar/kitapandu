@@ -15,8 +15,11 @@ import { authMiddleware } from '../middleware/auth';
 const router = Router();
 
 /**
- * Get all programs (paginated)
- * GET /programs?page=1&limit=10
+ * GET /
+ * Fetches a paginated list of programs ordered by newest first.
+ * Supports `page` and `limit` query parameters.
+ * Includes related classes for each program.
+ * Returns 404 if no programs are found and handles server errors.
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -53,8 +56,11 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * Get program by ID
- * GET /programs/:id
+ * GET /:id
+ * Fetches a single program by its unique ID.
+ * Includes related classes.
+ * Returns 404 if the program is not found.
+ * Handles server errors gracefully.
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -83,7 +89,11 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * Create program (auth required)
+ * POST /
+ * Creates a new program.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created program with a 201 status code on success.
+ * Handles validation and server errors.
  */
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -114,7 +124,11 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Update program (auth required)
+ * PUT /:id
+ * Updates an existing program by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated program with related classes on success.
+ * Handles validation and server errors.
  */
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -146,7 +160,11 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Delete program (auth required)
+ * DELETE /:id
+ * Deletes a program by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {

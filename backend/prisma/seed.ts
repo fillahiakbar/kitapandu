@@ -14,6 +14,7 @@ async function main() {
     // Users
     // ======================
 
+    // ADMIN
     await prisma.user.upsert({
         where: { email: "admin@kitapandu.com" },
         update: {},

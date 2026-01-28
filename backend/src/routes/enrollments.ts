@@ -7,6 +7,13 @@ import { ZodError } from 'zod';
 
 const router = Router();
 
+/**
+ * GET /
+ * Fetches a paginated list of enrollments ordered by newest first.
+ * Supports `page` and `limit` query parameters.
+ * Includes related student and class data.
+ * Returns 404 if no enrollments are found and handles server errors.
+ */
 router.get('/', async (req: Request, res: Response) => {
   try {
     const page = Math.max(Number(req.query.page) || 1, 1);
@@ -41,7 +48,12 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-
+/**
+ * GET /:id
+ * Fetches a single enrollment by its unique ID.
+ * Returns 404 if the enrollment is not found.
+ * Handles server errors gracefully.
+ */
 router.get('/:id', async (req, res) => {
   try {
     const enrollment = await prisma.enrollments.findUnique({
@@ -59,6 +71,13 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+/**
+ * POST /
+ * Creates a new enrollment.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created enrollment with a 201 status code on success.
+ * Handles validation and server errors.
+ */
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const data = createEnrollmentSchema.parse(req.body);
@@ -78,6 +97,13 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * PUT /:id
+ * Updates an existing enrollment by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated enrollment on success.
+ * Handles validation and server errors.
+ */
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
     const data = updateEnrollmentSchema.parse(req.body);
@@ -99,6 +125,13 @@ router.put('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * DELETE /:id
+ * Deletes an enrollment by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
+ */
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     await prisma.enrollments.delete({ where: { enrollment_id: req.params.id } });
