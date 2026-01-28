@@ -9,11 +9,11 @@ export type PaginationMeta = {
     hasPrevPage: boolean;
 };
 
-export type ApiResponse<T> = {
+export type ApiResponse<T=null> = {
     success: boolean;
     message: string;
     data?: T;
-    errors?: unknown;
+    errors?: unknown|null;
 };
 
 export type PaginatedResponse<T> = {
@@ -41,7 +41,7 @@ export const errorResponse = (
     res: Response,
     message = "Internal server error",
     statusCode = 500,
-    errors: unknown
+    errors: unknown | null = null
 ): Response<ApiResponse<null>> => {
     return res.status(statusCode).json({
         success: false,

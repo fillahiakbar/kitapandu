@@ -64,6 +64,16 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model TokenBlacklist {
+  id        String   @id @default(uuid())
+  jti       String   @unique
+  userId    String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([userId])
+}
 
 model Announcements {
   announcements_id String   @id @default(uuid()) @db.Char(36)
@@ -82,6 +92,7 @@ model Donation {
   collected_amount   Int
   percent            Int
   google_form_url    String               @db.Text
+  image              String?
   start_date         DateTime @db.Date
   end_date           DateTime @db.Date
   created_at         DateTime @default(now())

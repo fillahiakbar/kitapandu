@@ -1,10 +1,12 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { JWT_SECRET, JWT_EXPIRY } from "../helper/env";
 
 export interface JwtPayload {
   id: string;
   email: string;
   role: 'admin' | 'operator';
+  jti?: string; // JWT ID for token revocation
   iat?: number;
   exp?: number;
 }
@@ -18,10 +20,11 @@ if (!JWT_EXPIRY) {
 }
 
 /**
- * Generate JWT token
+ * Generate JWT token with JTI
  */
-export const generateToken = (payload: Omit<JwtPayload, 'iat' | 'exp'>): string => {
-  return jwt.sign(payload, JWT_SECRET, {
+export const generateToken = (payload: Omit<JwtPayload, 'iat' | 'exp' | 'jti'>): string => {
+  const jti = uuidv4();
+  return jwt.sign({ ...payload, jti }, JWT_SECRET, {
     expiresIn: JWT_EXPIRY
   } as SignOptions);
 };
@@ -49,4 +52,20 @@ export const decodeToken = (token: string): JwtPayload | null => {
   } catch (error) {
     return null;
   }
+};
+
+/**
+ * Get token expiration time in Unix timestamp
+ */
+export const getTokenExpiration = (token: string): number | null => {
+  const decoded = decodeToken(token);
+  return decoded?.exp || null;
+};
+
+/**
+ * Get JTI from token
+ */
+export const getTokenJti = (token: string): string | null => {
+  const decoded = decodeToken(token);
+  return decoded?.jti || null;
 };
