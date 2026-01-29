@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { ScheduleForm } from "../utils/scheduleUtils";
 
 export interface Schedule {
@@ -10,56 +11,59 @@ export interface Schedule {
   date: string;
 }
 
-const initialSchedules: Schedule[] = [
-  {
-    schedule_id: "1",
-    class_id: "class-1",
-    class_name: "Kelas Tahsin A",
-    date: "2025-01-15",
-  },
-];
-
 export const useSchedules = () => {
-  const [schedules, setSchedules] = useState<Schedule[]>(initialSchedules);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const addSchedule = (form: ScheduleForm, className: string) => {
-    setSchedules((prev) => [
-      ...prev,
-      {
-        schedule_id: crypto.randomUUID(),
-        class_id: form.class_id,
-        class_name: className,
-        date: form.date,
-      },
-    ]);
+  const fetchSchedules = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/schedules");
+
+      const mapped: Schedule[] = res.data.map((s: any) => ({
+        schedule_id: s.schedule_id,
+        class_id: s.class_id,
+        class_name: s.class?.name || "-",
+        date: s.date.split("T")[0],
+      }));
+
+      setSchedules(mapped);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateSchedule = (
-    id: string,
-    form: ScheduleForm,
-    className: string,
-  ) => {
-    setSchedules((prev) =>
-      prev.map((s) =>
-        s.schedule_id === id
-          ? {
-              ...s,
-              class_id: form.class_id,
-              class_name: className,
-              date: form.date,
-            }
-          : s,
-      ),
-    );
+  const addSchedule = async (form: ScheduleForm) => {
+    await apiFetch("/schedules", {
+      method: "POST",
+      body: JSON.stringify(form),
+    });
+    fetchSchedules();
   };
 
-  const deleteSchedule = (id: string) => {
+  const updateSchedule = async (id: string, form: ScheduleForm) => {
+    await apiFetch(`/schedules/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(form),
+    });
+    fetchSchedules();
+  };
+
+  const deleteSchedule = async (id: string) => {
     if (!confirm("Hapus jadwal ini?")) return;
-    setSchedules((prev) => prev.filter((s) => s.schedule_id !== id));
+    await apiFetch(`/schedules/${id}`, {
+      method: "DELETE",
+    });
+    fetchSchedules();
   };
+
+  useEffect(() => {
+    fetchSchedules();
+  }, []);
 
   return {
     schedules,
+    loading,
     addSchedule,
     updateSchedule,
     deleteSchedule,

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { StudentForm } from "../utils/studentUtils";
 
 export interface Student {
@@ -11,53 +12,53 @@ export interface Student {
   whatsapp: string;
 }
 
-const initialStudents: Student[] = [
-  {
-    student_id: "1",
-    student_name: "Ahmad Fauzi",
-    student_age: 10,
-    parent_name: "Budi",
-    whatsapp: "081234567890",
-  },
-];
-
 export const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const addStudent = (form: StudentForm) => {
-    setStudents((prev) => [
-      ...prev,
-      {
-        student_id: crypto.randomUUID(),
-        student_name: form.student_name,
+  const fetchStudents = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/students");
+      setStudents(res.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addStudent = async (form: StudentForm) => {
+    await apiFetch("/students", {
+      method: "POST",
+      body: JSON.stringify({
+        ...form,
         student_age: Number(form.student_age),
-        parent_name: form.parent_name,
-        whatsapp: form.whatsapp,
-      },
-    ]);
+      }),
+    });
+    fetchStudents();
   };
 
-  const updateStudent = (id: string, form: StudentForm) => {
-    setStudents((prev) =>
-      prev.map((s) =>
-        s.student_id === id
-          ? {
-              ...s,
-              student_name: form.student_name,
-              student_age: Number(form.student_age),
-              parent_name: form.parent_name,
-              whatsapp: form.whatsapp,
-            }
-          : s,
-      ),
-    );
+  const updateStudent = async (id: string, form: StudentForm) => {
+    await apiFetch(`/students/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        ...form,
+        student_age: Number(form.student_age),
+      }),
+    });
+    fetchStudents();
   };
 
-  const deleteStudent = (id: string) => {
+  const deleteStudent = async (id: string) => {
     if (!confirm("Hapus data siswa ini?")) return;
-    setStudents((prev) => prev.filter((s) => s.student_id !== id));
+    await apiFetch(`/students/${id}`, {
+      method: "DELETE",
+    });
+    fetchStudents();
   };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   return {
     students,

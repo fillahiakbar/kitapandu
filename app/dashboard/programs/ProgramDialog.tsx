@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -83,7 +83,7 @@ export default function ProgramDialog({
           />
 
           <TextField
-            label="Icon (emoji / class icon)"
+            label="Icon"
             name="icon"
             value={form.icon}
             onChange={handleChange}

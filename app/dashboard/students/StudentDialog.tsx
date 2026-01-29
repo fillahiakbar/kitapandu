@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,21 +11,13 @@ import {
   Stack,
 } from "@mui/material";
 
+import { StudentForm, studentFormDefault } from "./utils/studentUtils";
+
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSave: (data: {
-    student_name: string;
-    student_age: number;
-    parent_name: string;
-    whatsapp: string;
-  }) => void;
-  initialData?: {
-    student_name: string;
-    student_age: number;
-    parent_name: string;
-    whatsapp: string;
-  };
+  onSave: (form: StudentForm) => void;
+  initialData?: StudentForm;
 }
 
 export default function StudentDialog({
@@ -34,24 +26,11 @@ export default function StudentDialog({
   onSave,
   initialData,
 }: Props) {
-  const [form, setForm] = useState({
-    student_name: "",
-    student_age: 0,
-    parent_name: "",
-    whatsapp: "",
-  });
+  const [form, setForm] = useState<StudentForm>(studentFormDefault);
 
   useEffect(() => {
-    if (initialData) {
-      setForm(initialData);
-    } else {
-      setForm({
-        student_name: "",
-        student_age: 0,
-        parent_name: "",
-        whatsapp: "",
-      });
-    }
+    if (initialData) setForm(initialData);
+    else setForm(studentFormDefault);
   }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,18 +40,14 @@ export default function StudentDialog({
   const handleSubmit = () => {
     if (
       !form.student_name ||
+      !form.student_age ||
       !form.parent_name ||
-      !form.whatsapp ||
-      !form.student_age
+      !form.whatsapp
     ) {
       alert("Semua field wajib diisi");
       return;
     }
-
-    onSave({
-      ...form,
-      student_age: Number(form.student_age),
-    });
+    onSave(form);
   };
 
   return (

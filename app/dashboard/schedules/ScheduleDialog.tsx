@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,18 +13,19 @@ import {
 } from "@mui/material";
 
 import { ScheduleForm } from "./utils/scheduleUtils";
+import { apiFetch } from "@/lib/api";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSave: (form: ScheduleForm, className: string) => void;
+  onSave: (form: ScheduleForm) => void;
   initialData?: ScheduleForm;
 }
 
-const dummyClasses = [
-  { id: "class-1", name: "Kelas Tahsin A" },
-  { id: "class-2", name: "Kelas Tahsin B" },
-];
+interface ClassOption {
+  class_id: string;
+  name: string;
+}
 
 export default function ScheduleDialog({
   open,
@@ -36,6 +37,17 @@ export default function ScheduleDialog({
     class_id: "",
     date: "",
   });
+
+  const [classes, setClasses] = useState<ClassOption[]>([]);
+
+  const fetchClasses = async () => {
+    const res = await apiFetch("/classes");
+    setClasses(res.data);
+  };
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
 
   useEffect(() => {
     if (initialData) setForm(initialData);
@@ -51,11 +63,7 @@ export default function ScheduleDialog({
       alert("Kelas dan tanggal wajib diisi");
       return;
     }
-
-    const className =
-      dummyClasses.find((c) => c.id === form.class_id)?.name || "-";
-
-    onSave(form, className);
+    onSave(form);
   };
 
   return (
@@ -74,8 +82,8 @@ export default function ScheduleDialog({
             onChange={handleChange}
             fullWidth
           >
-            {dummyClasses.map((cls) => (
-              <MenuItem key={cls.id} value={cls.id}>
+            {classes.map((cls) => (
+              <MenuItem key={cls.class_id} value={cls.class_id}>
                 {cls.name}
               </MenuItem>
             ))}

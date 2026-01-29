@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { ProgramForm } from "../utils/programUtils";
 
 export interface Program {
@@ -9,44 +10,56 @@ export interface Program {
   description: string;
   icon?: string;
   image?: string;
+  created_at: string;
+  updated_at: string;
+  classes?: any[];
 }
 
-const initialPrograms: Program[] = [
-  {
-    program_id: "1",
-    name: "Tahsin Anak",
-    description: "Program perbaikan bacaan Al-Qur'an untuk anak-anak",
-    icon: "📘",
-    image: "",
-  },
-];
-
 export const usePrograms = () => {
-  const [programs, setPrograms] = useState<Program[]>(initialPrograms);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const addProgram = (form: ProgramForm) => {
-    setPrograms((prev) => [
-      ...prev,
-      {
-        program_id: crypto.randomUUID(),
-        ...form,
-      },
-    ]);
+  const fetchPrograms = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/programs");
+      setPrograms(res.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateProgram = (id: string, form: ProgramForm) => {
-    setPrograms((prev) =>
-      prev.map((p) => (p.program_id === id ? { ...p, ...form } : p)),
-    );
+  const addProgram = async (form: ProgramForm) => {
+    await apiFetch("/programs", {
+      method: "POST",
+      body: JSON.stringify(form),
+    });
+    fetchPrograms();
   };
 
-  const deleteProgram = (id: string) => {
+  const updateProgram = async (id: string, form: ProgramForm) => {
+    await apiFetch(`/programs/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(form),
+    });
+    fetchPrograms();
+  };
+
+  const deleteProgram = async (id: string) => {
     if (!confirm("Hapus program ini?")) return;
-    setPrograms((prev) => prev.filter((p) => p.program_id !== id));
+    await apiFetch(`/programs/${id}`, {
+      method: "DELETE",
+    });
+    fetchPrograms();
   };
+
+  useEffect(() => {
+    fetchPrograms();
+  }, []);
 
   return {
     programs,
+    loading,
     addProgram,
     updateProgram,
     deleteProgram,

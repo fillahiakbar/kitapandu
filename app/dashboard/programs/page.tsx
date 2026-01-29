@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -52,12 +52,11 @@ export default function ProgramsPage() {
     {
       field: "actions",
       headerName: "Aksi",
-      width: 130,
+      width: 120,
       sortable: false,
       renderCell: (params) => (
         <>
           <IconButton
-            color="primary"
             onClick={() => {
               setEditingData(params.row);
               setOpen(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -23,16 +23,6 @@ export default function StudentsPage() {
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState<any>(null);
 
-  const handleAdd = () => {
-    setEditingData(null);
-    setOpen(true);
-  };
-
-  const handleEdit = (row: any) => {
-    setEditingData(row);
-    setOpen(true);
-  };
-
   const handleSave = (form: any) => {
     if (editingData) {
       updateStudent(editingData.student_id, form);
@@ -43,47 +33,41 @@ export default function StudentsPage() {
   };
 
   const columns: GridColDef[] = [
-    {
-      field: "student_name",
-      headerName: "Nama Siswa",
-      flex: 1,
-      minWidth: 180,
-    },
+    { field: "student_name", headerName: "Nama Siswa", flex: 1 },
     {
       field: "student_age",
       headerName: "Umur",
       width: 100,
       align: "center",
-      headerAlign: "center",
     },
-    {
-      field: "parent_name",
-      headerName: "Nama Orang Tua",
-      flex: 1,
-      minWidth: 180,
-    },
+    { field: "parent_name", headerName: "Nama Orang Tua", flex: 1 },
     {
       field: "whatsapp",
       headerName: "WhatsApp",
       width: 160,
       renderCell: (params) => (
-        <Chip
-          label={params.value}
-          size="small"
-          color="success"
-          variant="outlined"
-        />
+        <Chip label={params.value} size="small" color="success" />
       ),
     },
     {
       field: "actions",
       headerName: "Aksi",
-      width: 130,
+      width: 120,
       sortable: false,
-      align: "center",
       renderCell: (params) => (
         <>
-          <IconButton color="primary" onClick={() => handleEdit(params.row)}>
+          <IconButton
+            onClick={() => {
+              setEditingData({
+                student_id: params.row.student_id,
+                student_name: params.row.student_name,
+                student_age: String(params.row.student_age),
+                parent_name: params.row.parent_name,
+                whatsapp: params.row.whatsapp,
+              });
+              setOpen(true);
+            }}
+          >
             <EditIcon />
           </IconButton>
           <IconButton
@@ -99,47 +83,31 @@ export default function StudentsPage() {
 
   return (
     <Box p={3}>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
+      <Stack direction="row" justifyContent="space-between" mb={2}>
         <Typography variant="h4" fontWeight={600}>
           Data Siswa
         </Typography>
 
-        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAdd}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setEditingData(null);
+            setOpen(true);
+          }}
+        >
           Tambah Siswa
         </Button>
       </Stack>
 
-      <Box
-        sx={{
-          backgroundColor: "white",
-          borderRadius: 2,
-          boxShadow: 1,
-        }}
-      >
-        <DataGrid
-          rows={students}
-          columns={columns}
-          getRowId={(row) => row.student_id}
-          autoHeight
-          pageSizeOptions={[5, 10]}
-          disableRowSelectionOnClick
-          sx={{
-            border: "none",
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "#f5f5f5",
-              fontWeight: "bold",
-            },
-            "& .MuiDataGrid-row:hover": {
-              backgroundColor: "#fafafa",
-            },
-          }}
-        />
-      </Box>
+      <DataGrid
+        rows={students}
+        columns={columns}
+        getRowId={(row) => row.student_id}
+        autoHeight
+        pageSizeOptions={[5, 10]}
+        disableRowSelectionOnClick
+      />
 
       <StudentDialog
         open={open}

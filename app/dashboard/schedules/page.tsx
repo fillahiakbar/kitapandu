@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -24,11 +24,11 @@ export default function SchedulesPage() {
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState<any>(null);
 
-  const handleSave = (form: any, className: string) => {
+  const handleSave = (form: any) => {
     if (editingData) {
-      updateSchedule(editingData.schedule_id, form, className);
+      updateSchedule(editingData.schedule_id, form);
     } else {
-      addSchedule(form, className);
+      addSchedule(form);
     }
     setOpen(false);
   };
@@ -55,17 +55,16 @@ export default function SchedulesPage() {
     {
       field: "actions",
       headerName: "Aksi",
-      width: 130,
+      width: 120,
       sortable: false,
       renderCell: (params) => (
         <>
           <IconButton
-            color="primary"
             onClick={() => {
               setEditingData({
+                schedule_id: params.row.schedule_id,
                 class_id: params.row.class_id,
                 date: params.row.date,
-                schedule_id: params.row.schedule_id,
               });
               setOpen(true);
             }}
