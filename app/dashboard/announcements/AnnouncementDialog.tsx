@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,22 +13,20 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import {
-  announcementCategories,
-  getCategoryLabel,
-} from "./utils/announcementUtils";
+
+const categories = ["jadwal", "libur", "event", "informasi umum"];
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onSave: (data: {
-    id?: number;
+    id?: string;
     title: string;
     category: string;
     content: string;
   }) => void;
   initialData?: {
-    id?: number;
+    announcements_id?: string;
     title: string;
     category: string;
     content: string;
@@ -62,7 +60,13 @@ export default function AnnouncementDialog({
       alert("Semua field wajib diisi");
       return;
     }
-    onSave({ id: initialData?.id, title, category, content });
+
+    onSave({
+      id: initialData?.announcements_id,
+      title,
+      category,
+      content,
+    });
   };
 
   return (
@@ -78,6 +82,7 @@ export default function AnnouncementDialog({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <FormControl fullWidth margin="normal">
           <InputLabel>Kategori</InputLabel>
           <Select
@@ -85,13 +90,14 @@ export default function AnnouncementDialog({
             label="Kategori"
             onChange={(e) => setCategory(e.target.value)}
           >
-            {announcementCategories.map((cat) => (
+            {categories.map((cat) => (
               <MenuItem key={cat} value={cat}>
-                {getCategoryLabel(cat)}
+                {cat}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+
         <TextField
           label="Isi"
           fullWidth

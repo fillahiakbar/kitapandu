@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { DonationForm, DonationStatus } from "../utils/donationUtils";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
+import {
+  DonationForm,
+  DonationStatus,
+  apiToUiStatus,
+  uiToApiStatus,
+} from "../utils/donationUtils";
 
 export interface Donation {
   donation_id: string;
@@ -11,59 +17,69 @@ export interface Donation {
   collected_amount: number;
   percent: number;
   google_form_url: string;
+  image?: string | null;
   start_date: string;
   end_date: string;
+  created_at: string;
+  updated_at: string;
+  allocations?: any[];
 }
 
-const initialDonations: Donation[] = [
-  {
-    donation_id: "1",
-    title: "Donasi Renovasi Masjid",
-    status: "ACTIVE",
-    target_amount: 10000000,
-    collected_amount: 3500000,
-    percent: 35,
-    google_form_url: "https://forms.gle/example",
-    start_date: "2025-01-01",
-    end_date: "2025-03-01",
-  },
-];
-
 export const useDonations = () => {
-  const [donations, setDonations] = useState<Donation[]>(initialDonations);
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const addDonation = (form: DonationForm) => {
-    const percent = Math.floor(
-      (form.collected_amount / form.target_amount) * 100,
-    );
+  const fetchDonations = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/donations");
 
-    setDonations((prev) => [
-      ...prev,
-      {
-        donation_id: crypto.randomUUID(),
+      const mapped = res.data.map((item: any) => ({
+        ...item,
+        status: apiToUiStatus(item.status),
+      }));
+
+      setDonations(mapped);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addDonation = async (form: DonationForm) => {
+    await apiFetch("/donations", {
+      method: "POST",
+      body: JSON.stringify({
         ...form,
-        percent,
-      },
-    ]);
+        status: uiToApiStatus(form.status),
+      }),
+    });
+    fetchDonations();
   };
 
-  const updateDonation = (id: string, form: DonationForm) => {
-    const percent = Math.floor(
-      (form.collected_amount / form.target_amount) * 100,
-    );
-
-    setDonations((prev) =>
-      prev.map((d) => (d.donation_id === id ? { ...d, ...form, percent } : d)),
-    );
+  const updateDonation = async (id: string, form: DonationForm) => {
+    await apiFetch(`/donations/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        ...form,
+        status: uiToApiStatus(form.status),
+      }),
+    });
+    fetchDonations();
   };
 
-  const deleteDonation = (id: string) => {
+  const deleteDonation = async (id: string) => {
     if (!confirm("Hapus donasi ini?")) return;
-    setDonations((prev) => prev.filter((d) => d.donation_id !== id));
+    await apiFetch(`/donations/${id}`, { method: "DELETE" });
+    fetchDonations();
   };
+
+  useEffect(() => {
+    fetchDonations();
+  }, []);
 
   return {
     donations,
+    loading,
     addDonation,
     updateDonation,
     deleteDonation,

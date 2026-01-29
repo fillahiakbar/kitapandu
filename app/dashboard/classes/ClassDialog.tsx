@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -64,25 +64,18 @@ export default function ClassDialog({
             name="name"
             value={form.name}
             onChange={handleChange}
-            fullWidth
           />
-
           <TextField
             label="Rentang Umur"
             name="age_range"
             value={form.age_range}
             onChange={handleChange}
-            fullWidth
-            placeholder="contoh: 7–9 Tahun"
           />
-
           <TextField
             label="Periode"
             name="period"
             value={form.period}
             onChange={handleChange}
-            fullWidth
-            placeholder="Jan – Mar 2025"
           />
 
           <TextField
@@ -91,7 +84,6 @@ export default function ClassDialog({
             name="status"
             value={form.status}
             onChange={handleChange}
-            fullWidth
           >
             {classStatuses.map((status) => (
               <MenuItem key={status} value={status}>
@@ -101,11 +93,10 @@ export default function ClassDialog({
           </TextField>
 
           <TextField
-            label="URL Gambar (opsional)"
+            label="URL Gambar"
             name="image"
             value={form.image}
             onChange={handleChange}
-            fullWidth
           />
         </Stack>
       </DialogContent>

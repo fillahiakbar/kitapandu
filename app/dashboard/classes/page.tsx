@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -35,19 +35,8 @@ export default function ClassesPage() {
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Nama Kelas", flex: 1 },
-
-    {
-      field: "age_range",
-      headerName: "Umur",
-      width: 150,
-    },
-
-    {
-      field: "period",
-      headerName: "Periode",
-      width: 180,
-    },
-
+    { field: "age_range", headerName: "Umur", width: 150 },
+    { field: "period", headerName: "Periode", width: 150 },
     {
       field: "status",
       headerName: "Status",
@@ -60,16 +49,13 @@ export default function ClassesPage() {
         />
       ),
     },
-
     {
       field: "actions",
       headerName: "Aksi",
-      width: 130,
-      sortable: false,
+      width: 120,
       renderCell: (params) => (
         <>
           <IconButton
-            color="primary"
             onClick={() => {
               setEditingData(params.row);
               setOpen(true);
@@ -94,7 +80,6 @@ export default function ClassesPage() {
         <Typography variant="h4" fontWeight={600}>
           Daftar Kelas
         </Typography>
-
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -113,7 +98,6 @@ export default function ClassesPage() {
         getRowId={(row) => row.class_id}
         autoHeight
         pageSizeOptions={[5, 10]}
-        disableRowSelectionOnClick
       />
 
       <ClassDialog

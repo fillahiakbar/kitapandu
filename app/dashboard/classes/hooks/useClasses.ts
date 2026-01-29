@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { ClassForm, ClassStatus } from "../utils/classUtils";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
+import {
+  ClassForm,
+  ClassStatus,
+  apiToUiStatus,
+  uiToApiStatus,
+} from "../utils/classUtils";
 
 export interface Class {
   class_id: string;
@@ -12,48 +18,67 @@ export interface Class {
   period: string;
   status: ClassStatus;
   image?: string;
+  created_at: string;
+  updated_at: string;
+  mentor?: any;
+  program?: any;
 }
 
-const initialClasses: Class[] = [
-  {
-    class_id: "1",
-    program_id: "program-1",
-    mentor_id: "mentor-1",
-    name: "Kelas Tahsin A",
-    age_range: "7–9 Tahun",
-    period: "Jan – Mar 2025",
-    status: "ACTIVE",
-  },
-];
-
 export const useClasses = () => {
-  const [classes, setClasses] = useState<Class[]>(initialClasses);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const addClass = (form: ClassForm) => {
-    setClasses((prev) => [
-      ...prev,
-      {
-        class_id: crypto.randomUUID(),
-        program_id: "program-dummy",
-        mentor_id: "mentor-dummy",
+  const fetchClasses = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/classes");
+
+      const mapped = res.data.map((item: any) => ({
+        ...item,
+        status: apiToUiStatus(item.status),
+      }));
+
+      setClasses(mapped);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addClass = async (form: ClassForm) => {
+    await apiFetch("/classes", {
+      method: "POST",
+      body: JSON.stringify({
         ...form,
-      },
-    ]);
+        status: uiToApiStatus(form.status),
+      }),
+    });
+    fetchClasses();
   };
 
-  const updateClass = (id: string, form: ClassForm) => {
-    setClasses((prev) =>
-      prev.map((c) => (c.class_id === id ? { ...c, ...form } : c)),
-    );
+  const updateClass = async (id: string, form: ClassForm) => {
+    await apiFetch(`/classes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        ...form,
+        status: uiToApiStatus(form.status),
+      }),
+    });
+    fetchClasses();
   };
 
-  const deleteClass = (id: string) => {
+  const deleteClass = async (id: string) => {
     if (!confirm("Hapus kelas ini?")) return;
-    setClasses((prev) => prev.filter((c) => c.class_id !== id));
+    await apiFetch(`/classes/${id}`, { method: "DELETE" });
+    fetchClasses();
   };
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
 
   return {
     classes,
+    loading,
     addClass,
     updateClass,
     deleteClass,

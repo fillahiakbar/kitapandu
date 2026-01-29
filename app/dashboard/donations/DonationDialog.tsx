@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -74,7 +74,6 @@ export default function DonationDialog({
             name="title"
             value={form.title}
             onChange={handleChange}
-            fullWidth
           />
 
           <TextField
@@ -83,7 +82,6 @@ export default function DonationDialog({
             name="status"
             value={form.status}
             onChange={handleChange}
-            fullWidth
           >
             {donationStatuses.map((status) => (
               <MenuItem key={status} value={status}>
@@ -98,24 +96,19 @@ export default function DonationDialog({
             type="number"
             value={form.target_amount}
             onChange={handleChange}
-            fullWidth
           />
-
           <TextField
             label="Dana Terkumpul"
             name="collected_amount"
             type="number"
             value={form.collected_amount}
             onChange={handleChange}
-            fullWidth
           />
-
           <TextField
             label="Google Form URL"
             name="google_form_url"
             value={form.google_form_url}
             onChange={handleChange}
-            fullWidth
           />
 
           <TextField
@@ -126,7 +119,6 @@ export default function DonationDialog({
             value={form.start_date}
             onChange={handleChange}
           />
-
           <TextField
             label="Tanggal Selesai"
             name="end_date"

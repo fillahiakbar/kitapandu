@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -66,12 +66,10 @@ export default function DonationsPage() {
     {
       field: "actions",
       headerName: "Aksi",
-      width: 130,
-      sortable: false,
+      width: 120,
       renderCell: (params) => (
         <>
           <IconButton
-            color="primary"
             onClick={() => {
               setEditingData(params.row);
               setOpen(true);
@@ -96,6 +94,7 @@ export default function DonationsPage() {
         <Typography variant="h4" fontWeight={600}>
           Donasi
         </Typography>
+
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -114,7 +113,6 @@ export default function DonationsPage() {
         getRowId={(row) => row.donation_id}
         autoHeight
         pageSizeOptions={[5, 10]}
-        disableRowSelectionOnClick
       />
 
       <DonationDialog

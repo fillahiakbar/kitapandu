@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Typography,
@@ -8,91 +11,96 @@ import {
   Stack,
   Checkbox,
 } from "@mui/material";
-import Link from "next/link";
 
 import CustomTextField from "@/app/dashboard/components/forms/theme-elements/CustomTextField";
+import { apiFetch } from "@/lib/api";
 
-interface loginType {
-  title?: string;
-  subtitle?: React.ReactNode;
-  subtext?: React.ReactNode;
-}
+const AuthLogin = ({ title, subtitle, subtext }: any) => {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
-  <>
-    {title ? (
-      <Typography fontWeight="700" variant="h2" mb={1}>
-        {title}
-      </Typography>
-    ) : null}
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
 
-    {subtext}
+      const res = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-    <Stack>
-      <Box>
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          component="label"
-          htmlFor="username"
-          mb="5px"
-        >
-          Username
+      // ⬇️ SIMPAN TOKEN KE COOKIE
+      document.cookie = `access_token=${res.data.token}; path=/;`;
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {title && (
+        <Typography fontWeight="700" variant="h2" mb={1}>
+          {title}
         </Typography>
-        <CustomTextField variant="outlined" fullWidth />
-      </Box>
-      <Box mt="25px">
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          component="label"
-          htmlFor="password"
-          mb="5px"
-        >
-          Password
-        </Typography>
-        <CustomTextField type="password" variant="outlined" fullWidth />
-      </Box>
-      <Stack
-        justifyContent="space-between"
-        direction="row"
-        alignItems="center"
-        my={2}
-      >
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Remeber this Device"
+      )}
+
+      {subtext}
+
+      <Stack>
+        <Box>
+          <Typography fontWeight={600} mb="5px">
+            Email
+          </Typography>
+          <CustomTextField
+            fullWidth
+            value={email}
+            onChange={(e: any) => setEmail(e.target.value)}
           />
-        </FormGroup>
-        <Typography
-          component={Link}
-          href="/"
-          fontWeight="500"
-          sx={{
-            textDecoration: "none",
-            color: "primary.main",
-          }}
-        >
-          Forgot Password ?
-        </Typography>
+        </Box>
+
+        <Box mt="25px">
+          <Typography fontWeight={600} mb="5px">
+            Password
+          </Typography>
+          <CustomTextField
+            type="password"
+            fullWidth
+            value={password}
+            onChange={(e: any) => setPassword(e.target.value)}
+          />
+        </Box>
+
+        <Stack direction="row" justifyContent="space-between" my={2}>
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox defaultChecked />}
+              label="Remember this Device"
+            />
+          </FormGroup>
+        </Stack>
       </Stack>
-    </Stack>
-    <Box>
+
       <Button
-        color="primary"
-        variant="contained"
-        size="large"
         fullWidth
-        component={Link}
-        href="/"
-        type="submit"
+        size="large"
+        variant="contained"
+        disabled={loading}
+        onClick={handleLogin}
       >
-        Sign In
+        {loading ? "Signing in..." : "Sign In"}
       </Button>
-    </Box>
-    {subtitle}
-  </>
-);
+
+      {subtitle}
+    </>
+  );
+};
 
 export default AuthLogin;

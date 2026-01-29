@@ -17,18 +17,45 @@ export interface DonationForm {
   end_date: string;
 }
 
+/* ===== API <-> UI STATUS MAPPER ===== */
+// API: open | completed | cancelled
+export const apiToUiStatus = (status: string): DonationStatus => {
+  switch (status.toLowerCase()) {
+    case "open":
+      return "ACTIVE";
+    case "completed":
+      return "COMPLETED";
+    case "cancelled":
+      return "CANCELLED";
+    default:
+      return "DRAFT";
+  }
+};
+
+export const uiToApiStatus = (status: DonationStatus): string => {
+  switch (status) {
+    case "ACTIVE":
+      return "open";
+    case "COMPLETED":
+      return "completed";
+    case "CANCELLED":
+      return "cancelled";
+    default:
+      return "draft";
+  }
+};
+
+/* ===== UI HELPERS ===== */
 export const getStatusLabel = (status: DonationStatus) => {
   switch (status) {
-    case "DRAFT":
-      return "Draft";
     case "ACTIVE":
       return "Aktif";
     case "COMPLETED":
       return "Selesai";
     case "CANCELLED":
       return "Dibatalkan";
-    default:
-      return status;
+    case "DRAFT":
+      return "Draft";
   }
 };
 

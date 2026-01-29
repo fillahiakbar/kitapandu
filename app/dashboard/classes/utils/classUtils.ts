@@ -10,6 +10,23 @@ export interface ClassForm {
   image?: string;
 }
 
+/* ===== API <-> UI MAPPER ===== */
+export const apiToUiStatus = (status: string): ClassStatus => {
+  switch (status.toLowerCase()) {
+    case "active":
+      return "ACTIVE";
+    case "inactive":
+      return "INACTIVE";
+    default:
+      return "DRAFT";
+  }
+};
+
+export const uiToApiStatus = (status: ClassStatus): string => {
+  return status.toLowerCase();
+};
+
+/* ===== UI HELPERS ===== */
 export const getStatusLabel = (status: ClassStatus) => {
   switch (status) {
     case "ACTIVE":
@@ -18,8 +35,6 @@ export const getStatusLabel = (status: ClassStatus) => {
       return "Nonaktif";
     case "DRAFT":
       return "Draft";
-    default:
-      return status;
   }
 };
 

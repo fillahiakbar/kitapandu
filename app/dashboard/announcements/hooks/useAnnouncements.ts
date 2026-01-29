@@ -1,50 +1,63 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 
 export interface Announcement {
-  id: number;
+  announcements_id: string;
   title: string;
   category: string;
   content: string;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export const useAnnouncements = () => {
+export function useAnnouncements() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(false);
 
+  /* ===== GET ===== */
   const fetchAnnouncements = async () => {
     setLoading(true);
-    const res = await fetch("/api/announcements");
-    const data = await res.json();
-    setAnnouncements(data);
-    setLoading(false);
+    try {
+      const res = await apiFetch("/announcements");
+      setAnnouncements(res.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteAnnouncement = async (id: number) => {
-    if (!confirm("Yakin ingin menghapus pengumuman ini?")) return;
-    await fetch(`/api/announcements/${id}`, { method: "DELETE" });
-    fetchAnnouncements();
-  };
-
-  const saveAnnouncement = async (announcement: {
-    id?: number;
+  /* ===== POST / PUT ===== */
+  const saveAnnouncement = async (payload: {
+    id?: string;
     title: string;
     category: string;
     content: string;
   }) => {
-    const method = announcement.id ? "PATCH" : "POST";
-    const url = announcement.id
-      ? `/api/announcements/${announcement.id}`
-      : "/api/announcements";
+    if (payload.id) {
+      await apiFetch(`/announcements/${payload.id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    } else {
+      await apiFetch("/announcements", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    }
 
-    await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(announcement),
+    await fetchAnnouncements();
+  };
+
+  /* ===== DELETE ===== */
+  const deleteAnnouncement = async (id: string) => {
+    if (!confirm("Yakin ingin menghapus pengumuman ini?")) return;
+
+    await apiFetch(`/announcements/${id}`, {
+      method: "DELETE",
     });
 
-    fetchAnnouncements();
+    await fetchAnnouncements();
   };
 
   useEffect(() => {
@@ -54,8 +67,7 @@ export const useAnnouncements = () => {
   return {
     announcements,
     loading,
-    fetchAnnouncements,
-    deleteAnnouncement,
     saveAnnouncement,
+    deleteAnnouncement,
   };
-};
+}

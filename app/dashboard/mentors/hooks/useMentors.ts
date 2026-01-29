@@ -1,48 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { MentorForm } from "../utils/mentorUtils";
 
 export interface Mentor {
   mentor_id: string;
   name: string;
   contact: string;
+  created_at: string;
+  updated_at: string;
+  classes?: any[];
 }
 
-const initialMentors: Mentor[] = [
-  {
-    mentor_id: "1",
-    name: "Ust. Ahmad",
-    contact: "081234567890",
-  },
-];
-
 export const useMentors = () => {
-  const [mentors, setMentors] = useState<Mentor[]>(initialMentors);
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const addMentor = (form: MentorForm) => {
-    setMentors((prev) => [
-      ...prev,
-      {
-        mentor_id: crypto.randomUUID(),
-        ...form,
-      },
-    ]);
+  const fetchMentors = async () => {
+    setLoading(true);
+    try {
+      const res = await apiFetch("/mentors");
+      setMentors(res.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateMentor = (id: string, form: MentorForm) => {
-    setMentors((prev) =>
-      prev.map((m) => (m.mentor_id === id ? { ...m, ...form } : m)),
-    );
+  const addMentor = async (form: MentorForm) => {
+    await apiFetch("/mentors", {
+      method: "POST",
+      body: JSON.stringify(form),
+    });
+    fetchMentors();
   };
 
-  const deleteMentor = (id: string) => {
+  const updateMentor = async (id: string, form: MentorForm) => {
+    await apiFetch(`/mentors/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(form),
+    });
+    fetchMentors();
+  };
+
+  const deleteMentor = async (id: string) => {
     if (!confirm("Hapus mentor ini?")) return;
-    setMentors((prev) => prev.filter((m) => m.mentor_id !== id));
+    await apiFetch(`/mentors/${id}`, { method: "DELETE" });
+    fetchMentors();
   };
+
+  useEffect(() => {
+    fetchMentors();
+  }, []);
 
   return {
     mentors,
+    loading,
     addMentor,
     updateMentor,
     deleteMentor,
