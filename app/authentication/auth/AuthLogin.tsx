@@ -14,6 +14,7 @@ import {
 
 import CustomTextField from "@/app/dashboard/components/forms/theme-elements/CustomTextField";
 import { apiFetch } from "@/lib/api";
+import { setAccessToken, clearAccessToken } from "@/lib/authToken";
 
 const AuthLogin = ({ title, subtitle, subtext }: any) => {
   const router = useRouter();
@@ -25,6 +26,9 @@ const AuthLogin = ({ title, subtitle, subtext }: any) => {
     try {
       setLoading(true);
 
+      // ⬇️ PENTING: bersihkan token lama dulu
+      clearAccessToken();
+
       const res = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({
@@ -33,10 +37,10 @@ const AuthLogin = ({ title, subtitle, subtext }: any) => {
         }),
       });
 
-      // ⬇️ SIMPAN TOKEN KE COOKIE
-      document.cookie = `access_token=${res.data.token}; path=/;`;
+      // ⬇️ set token BARU (overwrite)
+      setAccessToken(res.data.token);
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err: any) {
       alert(err.message);
     } finally {

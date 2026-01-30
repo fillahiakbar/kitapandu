@@ -64,6 +64,20 @@ export default function DonationsPage() {
     },
 
     {
+      field: "allocations",
+      headerName: "Alokasi",
+      width: 120,
+      renderCell: (params) => (
+        <Button
+          size="small"
+          href={`/dashboard/donations/${params.row.donation_id}/allocations`}
+        >
+          Detail
+        </Button>
+      ),
+    },
+
+    {
       field: "actions",
       headerName: "Aksi",
       width: 120,
