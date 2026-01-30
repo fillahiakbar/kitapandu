@@ -10,11 +10,11 @@ type Props = {
 };
 
 const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
-    const safeProgress = Math.min(100, Math.max(0, donation.progress));
+    const safeProgress = Math.min(100, Math.max(0, donation.percent));
 
     const isOpen = donation.status === "open";
     const isUpcoming = donation.status === "upcoming";
-    const isSelesai = donation.status === "selesai";
+    const isSelesai = donation.status === "finished";
 
     const buttonLabel = isOpen
         ? "Donasi sekarang"
@@ -23,8 +23,8 @@ const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
             : "Segera Hadir";
 
     const href =
-        isOpen && donation.actionUrl
-            ? donation.actionUrl
+        isOpen && donation.google_form_url
+            ? donation.google_form_url
             : undefined;
 
     const handleClick = () => {
@@ -57,7 +57,7 @@ const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
             <div className="relative w-1/3 min-h-[140px]">
                 <Image
                     src={donation.image}
-                    alt={donation.name}
+                    alt={donation.title}
                     fill
                     className="object-cover rounded-lg"
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -68,7 +68,7 @@ const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
             <div className="w-2/3 p-5 flex flex-col justify-between">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                        {donation.name}
+                        {donation.title}
                     </h3>
 
                     <p className="text-sm text-gray-600 mt-2 line-clamp-3">
@@ -76,11 +76,11 @@ const DonationCard: React.FC<Props> = ({ donation, onDetail }) => {
                     </p>
 
                     <p className="text-lg mt-4 font-semibold text-blue-600">
-                        Rp {donation.collected.toLocaleString("id-ID")}
+                        Rp {donation.collected_amount.toLocaleString("id-ID")}
                     </p>
 
                     <p className="text-sm text-gray-400 line-clamp-3">
-                        Terkumpul dari Rp {donation.target.toLocaleString("id-ID")}
+                        Terkumpul dari Rp {donation.target_amount.toLocaleString("id-ID")}
                     </p>
 
                     {/* Progress */}
