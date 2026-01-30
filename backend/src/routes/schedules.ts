@@ -26,7 +26,13 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const schedules = await prisma.schedules.findMany({
-      include: { class: true },
+      include: {
+        class: {
+          include: {
+            mentor: true
+          }
+        }
+      },
       orderBy: { created_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
@@ -58,6 +64,13 @@ router.get('/:id', async (req, res) => {
   try {
     const schedule = await prisma.schedules.findUnique({
       where: { schedule_id: req.params.id },
+      include: {
+        class: {
+          include: {
+            mentor: true
+          }
+        }
+      },
     });
     if (!schedule) return errorResponse(res, 'Schedule not found', 404);
     return successResponse(res, schedule);
