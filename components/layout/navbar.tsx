@@ -21,8 +21,8 @@ export function Navbar() {
       children: [
         { label: "Pengumuman", href: "/announcements" },
         { label: "Kalendar Akademik", href: "/kalendar" },
-        { label: "FAQs", href: "#/faqs" },
-        { label: "Tentang Kami", href: "#/tentangkami" },
+        { label: "FAQs", href: "/" },
+        { label: "Tentang Kami", href: "/" },
       ],
     },
   ];

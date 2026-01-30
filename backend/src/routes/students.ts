@@ -56,7 +56,26 @@ router.get('/:id', async (req: Request, res: Response) => {
       where: { student_id: req.params.id },
       include: {
         enrollments: {
-          include: { class: true },
+          where: {
+            status: 'active',
+          },
+          include: {
+            class: {
+              include: {
+                mentor: {
+                  select: {
+                    mentor_id: true,
+                    name: true,
+                  },
+                },
+                schedules: {
+                  orderBy: {
+                    date: 'asc',
+                  },
+                },
+              },
+            },
+          },
         },
       },
     });
