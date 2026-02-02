@@ -1,4 +1,6 @@
 export interface ScheduleForm {
   class_id: string;
-  date: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
 }

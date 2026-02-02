@@ -21,6 +21,48 @@ export default async function ProgramPage({ params }: PageProps) {
   const json = await res.json();
 
   const classes = json.data;
+
+  if (!classes || classes.length === 0) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <div className="mb-12 flex items-center gap-4">
+          <Link
+            href="/programs"
+            className="inline-flex items-center rounded-md bg-white px-3 text-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-8 text-gray-400"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </Link>
+
+          <div className="flex-1">
+            <div className="text-blue-600 font-semibold">Program</div>
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight mt-1">
+              Program
+            </h1>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
+          <p className="text-gray-600 text-sm">
+            Belum ada kelas yang tersedia untuk program ini.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const program = classes[0]?.program;
 
   return (
@@ -63,7 +105,7 @@ export default async function ProgramPage({ params }: PageProps) {
             {/* Image */}
             <div className="relative h-40 w-full overflow-hidden rounded-t-xl bg-gray-100">
               <img
-                src={item.image || "/assets/images/class-placeholder.jpg"}
+                src={item.image || "/assets/images/programs/learning.jpg"}
                 alt={item.name}
                 className="h-full w-full object-cover"
               />

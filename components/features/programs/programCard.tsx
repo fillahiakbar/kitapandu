@@ -11,7 +11,7 @@ export function ProgramCard({ program }: ProgramCardProps) {
     <div className="flex flex-col rounded-xl border border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
       <div className="relative h-48 w-full">
         <Image
-          src={program.image}
+          src={program.image || "/assets/images/programs/learning.jpg"}
           alt={program.name}
           fill
           className="rounded-t-xl object-cover"

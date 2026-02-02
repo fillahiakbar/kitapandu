@@ -13,6 +13,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { getDayName } from "@/utils/dayOfWeek";
 
 import { useSchedules } from "./hooks/useSchedules";
 import ScheduleDialog from "./ScheduleDialog";
@@ -40,17 +41,21 @@ export default function SchedulesPage() {
       flex: 1,
     },
     {
-      field: "date",
+      field: "schedule",
       headerName: "Tanggal",
-      width: 160,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          color="primary"
-          variant="outlined"
-          size="small"
-        />
-      ),
+      width: 220,
+      renderCell: (params) => {
+        const { day_of_week, start_time, end_time } = params.row;
+
+        return (
+          <Chip
+            label={`${getDayName(day_of_week)} • ${start_time} - ${end_time}`}
+            color="primary"
+            variant="outlined"
+            size="small"
+          />
+        );
+      },
     },
     {
       field: "actions",

@@ -27,6 +27,16 @@ interface ClassOption {
   name: string;
 }
 
+const DAYS = [
+  { value: 0, label: "Minggu" },
+  { value: 1, label: "Senin" },
+  { value: 2, label: "Selasa" },
+  { value: 3, label: "Rabu" },
+  { value: 4, label: "Kamis" },
+  { value: 5, label: "Jumat" },
+  { value: 6, label: "Sabtu" },
+];
+
 export default function ScheduleDialog({
   open,
   onClose,
@@ -35,7 +45,9 @@ export default function ScheduleDialog({
 }: Props) {
   const [form, setForm] = useState<ScheduleForm>({
     class_id: "",
-    date: "",
+    day_of_week: 1,
+    start_time: "",
+    end_time: "",
   });
 
   const [classes, setClasses] = useState<ClassOption[]>([]);
@@ -51,18 +63,36 @@ export default function ScheduleDialog({
 
   useEffect(() => {
     if (initialData) setForm(initialData);
-    else setForm({ class_id: "", date: "" });
+    else {
+      setForm({
+        class_id: "",
+        day_of_week: 1,
+        start_time: "",
+        end_time: "",
+      });
+    }
   }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setForm({
+      ...form,
+      [name]:
+        name === "day_of_week" ? Number(value) : value,
+    });
   };
 
   const handleSubmit = () => {
-    if (!form.class_id || !form.date) {
-      alert("Kelas dan tanggal wajib diisi");
+    if (
+      !form.class_id ||
+      !form.start_time ||
+      !form.end_time
+    ) {
+      alert("Semua field wajib diisi");
       return;
     }
+
     onSave(form);
   };
 
@@ -90,11 +120,36 @@ export default function ScheduleDialog({
           </TextField>
 
           <TextField
-            label="Tanggal"
-            name="date"
-            type="date"
+            select
+            label="Hari"
+            name="day_of_week"
+            value={form.day_of_week}
+            onChange={handleChange}
+            fullWidth
+          >
+            {DAYS.map((day) => (
+              <MenuItem key={day.value} value={day.value}>
+                {day.label}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            label="Jam Mulai"
+            name="start_time"
+            type="time"
             InputLabelProps={{ shrink: true }}
-            value={form.date}
+            value={form.start_time}
+            onChange={handleChange}
+            fullWidth
+          />
+
+          <TextField
+            label="Jam Selesai"
+            name="end_time"
+            type="time"
+            InputLabelProps={{ shrink: true }}
+            value={form.end_time}
             onChange={handleChange}
             fullWidth
           />

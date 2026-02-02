@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DonationCard from "./donationCard";
-import DonationDetailModal from "./donationDetailModal";
+import DonationDetailModal from "./DonationDetailModal";
 import { Donation } from "./donation.types";
 
 interface DonationsListProps {

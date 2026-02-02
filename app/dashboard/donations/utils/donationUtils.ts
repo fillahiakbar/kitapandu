@@ -23,7 +23,7 @@ export const apiToUiStatus = (status: string): DonationStatus => {
   switch (status.toLowerCase()) {
     case "open":
       return "ACTIVE";
-    case "completed":
+    case "finished":
       return "COMPLETED";
     case "cancelled":
       return "CANCELLED";
@@ -37,11 +37,11 @@ export const uiToApiStatus = (status: DonationStatus): string => {
     case "ACTIVE":
       return "open";
     case "COMPLETED":
-      return "completed";
+      return "finished";
     case "CANCELLED":
       return "cancelled";
     default:
-      return "draft";
+      return "upcoming";
   }
 };
 
