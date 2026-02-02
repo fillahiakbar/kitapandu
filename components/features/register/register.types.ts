@@ -1,8 +1,6 @@
 export interface RegisterPayload {
-  parentName: string;
+  parent_name: string;
   whatsapp: string;
-  childName: string;
-  childAge: string;
-  grade: string;
-  note?: string;
+  student_name: string;
+  student_age: number;
 }

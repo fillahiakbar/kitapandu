@@ -29,9 +29,13 @@ export default function ClassDialog({
 }: Props) {
   const [form, setForm] = useState<ClassForm>({
     name: "",
-    age_range: "",
-    period: "",
+    min_age: 1,
+    max_age: 2,
+    started_at: new Date(),
+    ended_at: new Date(),
     status: "DRAFT",
+    program_id: "",
+    mentor_id: "",
     image: "",
   });
 
@@ -39,13 +43,34 @@ export default function ClassDialog({
     if (initialData) setForm(initialData);
   }, [initialData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    if (name === "min_age" || name === "max_age") {
+      setForm({ ...form, [name]: Number(value) });
+      return;
+    }
+
+    if (name === "started_at" || name === "ended_at") {
+      setForm({ ...form, [name]: new Date(value) });
+      return;
+    }
+
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = () => {
-    if (!form.name || !form.age_range || !form.period) {
-      alert("Semua field wajib diisi");
+    if (
+      !form.name ||
+      !form.program_id ||
+      !form.mentor_id ||
+      !form.started_at ||
+      !form.ended_at ||
+      form.min_age > form.max_age
+    ) {
+      alert("Semua field wajib diisi dengan benar");
       return;
     }
     onSave(form);
@@ -65,16 +90,60 @@ export default function ClassDialog({
             value={form.name}
             onChange={handleChange}
           />
+
           <TextField
-            label="Rentang Umur"
-            name="age_range"
-            value={form.age_range}
+            label="Usia Minimum"
+            name="min_age"
+            type="number"
+            value={form.min_age}
             onChange={handleChange}
           />
+
           <TextField
-            label="Periode"
-            name="period"
-            value={form.period}
+            label="Usia Maksimum"
+            name="max_age"
+            type="number"
+            value={form.max_age}
+            onChange={handleChange}
+          />
+
+          <TextField
+            label="Tanggal Mulai"
+            name="started_at"
+            type="date"
+            value={
+              form.started_at instanceof Date
+                ? form.started_at.toISOString().slice(0, 10)
+                : ""
+            }
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+          />
+
+          <TextField
+            label="Tanggal Selesai"
+            name="ended_at"
+            type="date"
+            value={
+              form.ended_at instanceof Date
+                ? form.ended_at.toISOString().slice(0, 10)
+                : ""
+            }
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+          />
+
+          <TextField
+            label="Program ID"
+            name="program_id"
+            value={form.program_id}
+            onChange={handleChange}
+          />
+
+          <TextField
+            label="Mentor ID"
+            name="mentor_id"
+            value={form.mentor_id}
             onChange={handleChange}
           />
 
@@ -95,7 +164,7 @@ export default function ClassDialog({
           <TextField
             label="URL Gambar"
             name="image"
-            value={form.image}
+            value={form.image || ""}
             onChange={handleChange}
           />
         </Stack>

@@ -4,9 +4,13 @@ export type ClassStatus = (typeof classStatuses)[number];
 
 export interface ClassForm {
   name: string;
-  age_range: string;
-  period: string;
+  min_age: number;
+  max_age: number;
+  started_at: Date;
+  ended_at: Date;
   status: ClassStatus;
+  program_id: string;
+  mentor_id: string;
   image?: string;
 }
 

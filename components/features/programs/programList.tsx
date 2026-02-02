@@ -1,17 +1,26 @@
 import { ProgramCard } from "./programCard";
-import { ProgramSchedule } from "./programs.data";
+import { Program } from "./program.types";
 
-export function ProgramList({ programs }: { programs: ProgramSchedule[] }) {
-  if (!programs || programs.length === 0) {
+type ProgramListProps = {
+  programs?: Program[];
+};
+
+export function ProgramList({ programs = [] }: ProgramListProps) {
+  if (programs.length === 0) {
     return (
-      <p className="text-gray-500 mt-6">Belum ada jadwal untuk program ini.</p>
+      <p className="mt-6 text-gray-500">
+        Belum ada jadwal untuk program ini.
+      </p>
     );
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {programs.map((program) => (
-        <ProgramCard key={program.id} {...program} />
+        <ProgramCard
+          key={program.program_id}
+          program={program}
+        />
       ))}
     </div>
   );

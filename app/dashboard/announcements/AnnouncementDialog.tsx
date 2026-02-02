@@ -14,7 +14,7 @@ import {
   InputLabel,
 } from "@mui/material";
 
-const categories = ["jadwal", "libur", "event", "informasi umum"];
+const categories = ["jadwal", "libur", "event", "umum"];
 
 interface Props {
   open: boolean;

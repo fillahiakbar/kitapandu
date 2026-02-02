@@ -2,6 +2,7 @@
 "use client";
 
 import { Donation, DonationAllocation } from "@/components/features/donation/donation.types";
+import { formatDate } from "@/utils/formattedDate";
 
 type Props = {
     donation: Donation;
@@ -31,7 +32,7 @@ export default function DonationDetailModal({ donation, onClose }: Props) {
                             Donasi Telah Disalurkan
                         </p>
                         <p className="text-sm text-green-600">
-                            Tanggal Selesai: 12 Januari 2026
+                            Tanggal Selesai: {formatDate(donation.end_date)}
                         </p>
                     </div>
                 </div>
@@ -43,10 +44,10 @@ export default function DonationDetailModal({ donation, onClose }: Props) {
                             Total Donasi Terkumpul
                         </p>
                         <p className="text-lg font-semibold text-blue-700">
-                            Rp {donation.collected.toLocaleString("id-ID")}
+                            Rp {donation.collected_amount.toLocaleString("id-ID")}
                         </p>
                         <p className="text-gray-500">
-                            Jumlah Donatur: 124 orang
+                            Jumlah Donatur: {donation.jumlah_donatur}
                         </p>
                     </div>
 
@@ -55,7 +56,7 @@ export default function DonationDetailModal({ donation, onClose }: Props) {
                             Periode Donasi
                         </p>
                         <p className="text-gray-600">
-                            Nov 2025 – Jan 2026
+                            {formatDate(donation.start_date)} - {formatDate(donation.end_date)}
                         </p>
                     </div>
                 </div>
@@ -72,17 +73,17 @@ export default function DonationDetailModal({ donation, onClose }: Props) {
                                 <div key={idx}>
                                     <div className="flex justify-between text-sm mb-1">
                                         <span className="text-gray-700">
-                                            {item.label}
+                                            {item.title}
                                         </span>
                                         <span className="text-gray-500">
-                                            {item.percentage}%
+                                            {item.percent}%
                                         </span>
                                     </div>
 
                                     <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-blue-600 rounded-full"
-                                            style={{ width: `${item.percentage}%` }}
+                                            style={{ width: `${item.percent}%` }}
                                         />
                                     </div>
                                 </div>

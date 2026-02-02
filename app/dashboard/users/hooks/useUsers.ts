@@ -19,7 +19,7 @@ export const useUsers = () => {
   };
 
   const addUser = async (form: UserForm) => {
-    await apiFetch("/users", {
+    await apiFetch("/auth/signup", {
       method: "POST",
       body: JSON.stringify(form),
     });

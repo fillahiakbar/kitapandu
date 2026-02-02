@@ -16,7 +16,11 @@ import { error } from 'console';
 const router = Router();
 
 /**
- * GET all mentors (paginated) - PUBLIC
+ * GET /
+ * Fetches a paginated list of mentors ordered by newest first.
+ * Supports `page` and `limit` query parameters.
+ * Includes related classes for each mentor.
+ * Returns 404 if no mentors are found and handles server errors.
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -51,7 +55,11 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * GET mentor by ID - PUBLIC
+ * GET /:id
+ * Fetches a single mentor by its unique ID.
+ * Includes related classes.
+ * Returns 404 if the mentor is not found.
+ * Handles server errors gracefully.
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -74,7 +82,11 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * CREATE mentor - AUTH
+ * POST /
+ * Creates a new mentor.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created mentor with a 201 status code on success.
+ * Handles validation and server errors.
  */
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -91,7 +103,11 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * UPDATE mentor - AUTH
+ * PUT /:id
+ * Updates an existing mentor by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated mentor on success.
+ * Handles validation and server errors.
  */
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -117,7 +133,11 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * DELETE mentor - AUTH
+ * DELETE /:id
+ * Deletes a mentor by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {

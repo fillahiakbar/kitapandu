@@ -8,7 +8,9 @@ export interface Schedule {
   schedule_id: string;
   class_id: string;
   class_name: string;
-  date: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
 }
 
 export const useSchedules = () => {
@@ -24,7 +26,9 @@ export const useSchedules = () => {
         schedule_id: s.schedule_id,
         class_id: s.class_id,
         class_name: s.class?.name || "-",
-        date: s.date.split("T")[0],
+        day_of_week: s.day_of_week,
+        start_time: s.start_time,
+        end_time: s.end_time,
       }));
 
       setSchedules(mapped);

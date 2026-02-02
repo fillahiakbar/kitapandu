@@ -2,16 +2,16 @@
 
 import clsx from "clsx";
 
-type TabValue = "open" | "upcoming" | "selesai";
+export type DonationFilterValue = "open" | "upcoming" | "finished";
 
 type Props = {
-    value: TabValue;
-    onChange: (value: TabValue) => void;
+    value: DonationFilterValue;
+    onChange: (value: DonationFilterValue) => void;
 };
 
-const tabs: { label: string; value: TabValue }[] = [
+const tabs: { label: string; value: DonationFilterValue }[] = [
     { label: "Donasi Terbuka", value: "open" },
-    { label: "Donasi Selesai", value: "selesai" },
+    { label: "Donasi Selesai", value: "finished" },
     { label: "Donasi Akan Datang", value: "upcoming" },
 ];
 
