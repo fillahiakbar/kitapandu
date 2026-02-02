@@ -2,40 +2,40 @@ import { DonationAllocation } from "./donation.types";
 
 export const donationAllocations: DonationAllocation[] = [
     {
-        donationId: 7,
-        label: "Logistik & makanan",
-        percentage: 50,
+        donation_id: "thisuuid7",
+        title: "Logistik & makanan",
+        percent: 50,
         amount: 50000000
     },
     {
-        donationId: 7,
-        label: "Tenda & tempat tinggal sementara",
-        percentage: 30,
+        donation_id: "thisuuid7",
+        title: "Tenda & tempat tinggal sementara",
+        percent: 30,
         amount: 30000000
     },
     {
-        donationId: 7,
-        label: "Layanan medis darurat",
-        percentage: 20,
+        donation_id: "thisuuid7",
+        title: "Layanan medis darurat",
+        percent: 20,
         amount: 20000000
     },
 
     {
-        donationId: 8,
-        label: "Biaya tindakan operasi",
-        percentage: 70,
+        donation_id: "thisuuid8",
+        title: "Biaya tindakan operasi",
+        percent: 70,
         amount: 59500000
     },
     {
-        donationId: 8,
-        label: "Obat & perawatan pasca operasi",
-        percentage: 20,
+        donation_id: "thisuuid8",
+        title: "Obat & perawatan pasca operasi",
+        percent: 20,
         amount: 17000000
     },
     {
-        donationId: 8,
-        label: "Administrasi & tenaga medis",
-        percentage: 10,
+        donation_id: "thisuuid8",
+        title: "Administrasi & tenaga medis",
+        percent: 10,
         amount: 8500000
     }
 ];

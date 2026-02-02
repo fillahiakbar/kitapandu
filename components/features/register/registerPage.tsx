@@ -5,7 +5,7 @@ import { useRegister } from "./register.hook";
 import { RegisterForm } from "./registerForm";
 
 export default function RegisterPage() {
-  const { form, submitRegister } = useRegister();
+  const { form, submitRegister, contextHolder  } = useRegister();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -41,8 +41,10 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-
+      <>
+      {contextHolder}
       <RegisterForm form={form} onSubmit={submitRegister} />
+      </>
     </div>
   );
 }

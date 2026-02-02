@@ -12,17 +12,17 @@ export function Navbar() {
 
   const navItems = [
     { label: "Beranda", href: "/" },
-    { label: "Program", href: "/program" },
+    { label: "Program", href: "/programs" },
     { label: "Jadwal", href: "/jadwal" },
     { label: "Donasi", href: "/donation" },
     {
       label: "Informasi",
       href: "#",
       children: [
-        { label: "Pengumuman", href: "#/pengumuman" },
+        { label: "Pengumuman", href: "/announcements" },
         { label: "Kalendar Akademik", href: "/kalendar" },
-        { label: "FAQs", href: "#/faqs" },
-        { label: "Tentang Kami", href: "#/tentangkami" },
+        { label: "FAQs", href: "/" },
+        { label: "Tentang Kami", href: "/" },
       ],
     },
   ];

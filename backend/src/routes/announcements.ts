@@ -7,7 +7,13 @@ import { paginatedResponse, errorResponse, successResponse } from '../helper/api
 
 const router = Router();
 
-// Get all announcements
+/**
+ * GET /
+ * Fetches a paginated list of announcements ordered by newest first.
+ * Supports `page` and `limit` query params with validation and bounds.
+ * Returns 404 if no announcements exist, otherwise responds with
+ * paginated data and metadata. Handles and reports server errors.
+ */
 router.get('/', async (req: Request, res: Response) => {
   try {
     const page = Math.max(Number(req.query.page) || 1, 1);
@@ -54,7 +60,13 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get announcement by ID
+/**
+ * GET /:id
+ * Fetches a single announcement by its unique ID.
+ * Returns 404 if the announcement does not exist.
+ * Responds with the announcement data on success
+ * and handles server errors gracefully.
+ */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const announcement = await prisma.announcements.findUnique({
@@ -83,7 +95,13 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Create announcement (protected)
+/**
+ * POST /
+ * Creates a new announcement.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created announcement on success.
+ * Handles validation errors (400) and server errors (500).
+ */
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = createAnnouncementSchema.parse(req.body);
@@ -113,7 +131,13 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-// Update announcement (protected)
+/**
+ * PUT /:id
+ * Updates an existing announcement by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated announcement on success.
+ * Handles validation errors (400) and server errors (500).
+ */
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = updateAnnouncementSchema.parse(req.body);
@@ -144,7 +168,13 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-// Delete announcement (protected)
+/**
+ * DELETE /:id
+ * Deletes an announcement by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
+ */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     await prisma.announcements.delete({

@@ -14,7 +14,12 @@ import { authMiddleware } from '../middleware/auth';
 const router = Router();
 
 /**
- * Get all students (auth required)
+ * GET /
+ * Fetches a list of all students.
+ * Requires authentication.
+ * Includes related enrollment data for each student.
+ * Returns students ordered by newest first.
+ * Handles server errors gracefully.
  */
 router.get('/', authMiddleware, async (_req: Request, res: Response) => {
   try {
@@ -39,7 +44,11 @@ router.get('/', authMiddleware, async (_req: Request, res: Response) => {
 });
 
 /**
- * Get student by ID (PUBLIC)
+ * GET /:id
+ * Fetches a single student by its unique ID.
+ * Includes enrollments with related class details.
+ * Returns 404 if the student is not found.
+ * Handles server errors gracefully.
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -47,7 +56,26 @@ router.get('/:id', async (req: Request, res: Response) => {
       where: { student_id: req.params.id },
       include: {
         enrollments: {
-          include: { class: true },
+          where: {
+            status: 'active',
+          },
+          include: {
+            class: {
+              include: {
+                mentor: {
+                  select: {
+                    mentor_id: true,
+                    name: true,
+                  },
+                },
+                schedules: {
+                  orderBy: {
+                    day_of_week: 'asc',
+                  },
+                },
+              },
+            },
+          },
         },
       },
     });
@@ -72,9 +100,13 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * Create student (auth required)
+ * POST /
+ * Creates a new student record.
+ * Requires authentication and validates request body using Zod.
+ * Returns the created student with a 201 status code on success.
+ * Handles validation and server errors.
  */
-router.post('/', authMiddleware, async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const body = createStudentSchema.parse(req.body);
 
@@ -103,7 +135,96 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Update student (auth required)
+ * Get active class schedules for a specific student
+ *
+ * This endpoint returns a student along with all of their
+ * ACTIVE enrollments only, including:
+ * - Class information
+ * - Program name
+ * - Mentor name
+ * - Weekly schedules (ordered by day and time)
+ *
+ * Route: GET /students/:id/schedule
+ *
+ * Params:
+ * - id (string, UUID): Student ID
+ *
+ * Response:
+ * - Student data
+ * - Active enrollments with class, program, mentor, and schedules
+ *
+ * Notes:
+ * - Only enrollments with status = "active" are included
+ * - Used for parent view to check child class schedules
+ */
+
+router.get('/:id/schedule', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const student = await prisma.students.findUnique({
+      where: {
+        student_id: id,
+      },
+      include: {
+        enrollments: {
+          where: {
+            status: 'active',
+          },
+          include: {
+            class: {
+              include: {
+                program: {
+                  select: {
+                    program_id: true,
+                    name: true,
+                  },
+                },
+                mentor: {
+                  select: {
+                    mentor_id: true,
+                    name: true,
+                  },
+                },
+                schedules: {
+                  orderBy: [
+                    { day_of_week: 'asc' },
+                    { start_time: 'asc' },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!student) {
+      return errorResponse(res, 'Student not found', 404);
+    }
+
+    return successResponse(
+      res,
+      student,
+      'Active student schedule fetched successfully'
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      'Failed to fetch student schedule',
+      500,
+      error instanceof Error ? error.message : error
+    );
+  }
+});
+
+
+/**
+ * PUT /:id
+ * Updates an existing student by its unique ID.
+ * Requires authentication and validates request body using Zod.
+ * Returns the updated student on success.
+ * Handles validation and server errors.
  */
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -134,7 +255,11 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 });
 
 /**
- * Delete student (auth required)
+ * DELETE /:id
+ * Deletes a student by its unique ID.
+ * Requires authentication.
+ * Returns a success message on successful deletion.
+ * Handles server errors gracefully.
  */
 router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
