@@ -5,14 +5,14 @@ export enum DonationStatus {
 }
 
 export interface DonationAllocation {
-    donation_id: number;
+    donation_id: string;
     title: string;
     percent: number;
     amount: number;
 }
 
 export interface Donation {
-    donation_id: number;
+    donation_id: string;
     title: string;
     description: string;
     status: DonationStatus;

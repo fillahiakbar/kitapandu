@@ -7,8 +7,6 @@ export const createEnrollmentSchema = z.object({
   status: z.nativeEnum(EnrollmentStatus),
   register_at: z.coerce.date(),
   confirmed_at: z.coerce.date(),
-  started_at: z.coerce.date(),
-  ended_at: z.coerce.date(),
 });
 
 export const updateEnrollmentSchema = z.object({
@@ -17,8 +15,6 @@ export const updateEnrollmentSchema = z.object({
   status: z.nativeEnum(EnrollmentStatus).optional(),
   register_at: z.coerce.date().optional(),
   confirmed_at: z.coerce.date().optional(),
-  started_at: z.coerce.date().optional(),
-  ended_at: z.coerce.date().optional(),
 });
 
 export type createEnrollmentSchema = z.infer<typeof createEnrollmentSchema>;

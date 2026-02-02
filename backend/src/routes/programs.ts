@@ -33,7 +33,13 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const programs = await prisma.programs.findMany({
-      include: { classes: true },
+      include: {
+        classes: {
+          include: {
+            schedules: true
+          }
+        }
+      },
       orderBy: { created_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
@@ -66,7 +72,13 @@ router.get('/:id', async (req: Request, res: Response) => {
   try {
     const program = await prisma.programs.findUnique({
       where: { program_id: req.params.id },
-      include: { classes: true },
+      include: {
+        classes: {
+          include: {
+            schedules: true
+          }
+        }
+      },
     });
 
     if (!program) {
@@ -82,6 +94,65 @@ router.get('/:id', async (req: Request, res: Response) => {
     return errorResponse(
       res,
       'Failed to fetch program',
+      500,
+      error instanceof Error ? error.message : error
+    );
+  }
+});
+
+/**
+ * GET /:id
+ * Fetches a single class by program's unique ID.
+ * Includes related schedule.
+ * Returns 404 if the program is not found.
+ * Handles server errors gracefully.
+ */
+router.get('/class/:id', async (req: Request, res: Response) => {
+  try {
+    const { id: program_id } = req.params;
+
+    const classes = await prisma.classes.findMany({
+      where: {
+        program_id,
+      },
+      include: {
+        program: {
+          select: {
+            program_id: true,
+            name: true,
+          },
+        },
+        mentor: {
+          select: {
+            mentor_id: true,
+            name: true,
+          },
+        },
+        schedules: {
+          orderBy: [
+            { day_of_week: 'asc' },
+            { start_time: 'asc' },
+          ],
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
+    if (classes.length === 0) {
+      return errorResponse(res, 'No classes found for this program', 404);
+    }
+
+    return successResponse(
+      res,
+      classes,
+      'Classes fetched successfully'
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      'Failed to fetch classes',
       500,
       error instanceof Error ? error.message : error
     );

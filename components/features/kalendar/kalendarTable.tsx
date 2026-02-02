@@ -41,7 +41,7 @@ export default function KalendarTable() {
 
   const columns = useMemo<ColumnDef<KalendarRow>[]>(() => [
     { accessorKey: 'kelas', header: 'KELAS' },
-    { accessorKey: 'tanggal', header: 'TANGGAL' },
+    { accessorFn:(row) => `${row.hari}, ${row.start_time} - ${row.end_time}`, header: 'Hari dan waktu' },
     { accessorKey: 'mentor', header: 'MENTOR' },
     {
       accessorKey: 'status',

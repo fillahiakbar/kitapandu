@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Row, Col, Button } from "antd";
+import { Form, Input, Row, Col, Button, InputNumber } from "antd";
 import { registerRules } from "./register.schema";
 import { RegisterPayload } from "./register.types";
 
@@ -16,8 +16,8 @@ export function RegisterForm({ form, onSubmit }: Props) {
         <Col xs={24} md={12}>
           <Form.Item
             label="Nama Orangtua"
-            name="parentName"
-            rules={registerRules.parentName}
+            name="parent_name"
+            rules={registerRules.parent_name}
           >
             <Input
               size="large"
@@ -44,8 +44,8 @@ export function RegisterForm({ form, onSubmit }: Props) {
         <Col xs={24} md={12}>
           <Form.Item
             label="Nama Anak"
-            name="childName"
-            rules={registerRules.childName}
+            name="student_name"
+            rules={registerRules.student_name}
           >
             <Input
               size="large"
@@ -58,32 +58,12 @@ export function RegisterForm({ form, onSubmit }: Props) {
         <Col xs={24} md={12}>
           <Form.Item
             label="Usia Anak"
-            name="childAge"
-            rules={registerRules.childAge}
+            name="student_age"
+            rules={registerRules.student_age}
           >
-            <Input
+            <InputNumber
               size="large"
-              placeholder="Contoh: 7"
-              className="!rounded-xl !border-gray-200 !h-12"
-            />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} md={12}>
-          <Form.Item label="Kelas" name="grade" rules={registerRules.grade}>
-            <Input
-              size="large"
-              placeholder="Contoh: 1 SD"
-              className="!rounded-xl !border-gray-200 !h-12"
-            />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} md={12}>
-          <Form.Item label="Catatan (Opsional)" name="note">
-            <Input
-              size="large"
-              placeholder="Catatan tambahan"
+              placeholder="7"
               className="!rounded-xl !border-gray-200 !h-12"
             />
           </Form.Item>

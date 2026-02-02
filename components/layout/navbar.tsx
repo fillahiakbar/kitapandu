@@ -12,7 +12,7 @@ export function Navbar() {
 
   const navItems = [
     { label: "Beranda", href: "/" },
-    { label: "Program", href: "/program" },
+    { label: "Program", href: "/programs" },
     { label: "Jadwal", href: "/jadwal" },
     { label: "Donasi", href: "/donation" },
     {

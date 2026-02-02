@@ -1,13 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { getDayName } from '@/utils/dayOfWeek';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export type KalendarRow = {
   id: string;
   kelas: string;
-  tanggal: string;
+  hari: string,
+  start_time: string,
+  end_time: string
   mentor: string;
   status: 'active' | 'inactive';
 };
@@ -51,7 +54,9 @@ export function useSchedules() {
           id: item.schedule_id,
           kelas: item.class.name,
           mentor: item.class.mentor.name,
-          tanggal: new Date(item.date).toLocaleDateString('id-ID'),
+          hari: getDayName(item.day_of_week),
+          start_time: item.start_time,
+          end_time: item.end_time,
           status: item.class.status,
         }));
 

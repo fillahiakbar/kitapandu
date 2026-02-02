@@ -1,14 +1,16 @@
-export type Schedule = {
+export type schedules = {
   schedule_id: string;
-  date: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
 };
 
 export type ClassData = {
   name: string;
-  mentor?: {
+  mentor: {
     name: string;
   };
-  schedules: Schedule[];
+  schedules: schedules[];
 };
 
 export type Enrollment = {

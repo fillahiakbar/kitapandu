@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useStudentSchedule } from "./useStudentSchedule";
+import { getDayName } from "@/utils/dayOfWeek";
 
 export function JadwalForm() {
   const [code, setCode] = useState("");
@@ -54,21 +55,13 @@ export function JadwalForm() {
             </h3>
 
             <p className="text-sm text-gray-600">
-              Mentor: {enrollment.class.mentor?.name ?? "-"}
+              Mentor: {enrollment.class.mentor.name ?? "-"}
             </p>
 
             <ul className="mt-3 space-y-1">
               {enrollment.class.schedules.map((s) => (
                 <li key={s.schedule_id} className="text-sm">
-                  {" "}
-                  {new Date(s.date).toLocaleDateString("id-ID", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour:"2-digit",
-                    minute:"2-digit"
-                  })}
+                  {getDayName(s.day_of_week)} | {s.start_time} - {s.end_time}
                 </li>
               ))}
             </ul>

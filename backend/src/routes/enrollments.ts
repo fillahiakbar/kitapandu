@@ -78,7 +78,7 @@ router.get('/:id', async (req, res) => {
  * Returns the created enrollment with a 201 status code on success.
  * Handles validation and server errors.
  */
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const data = createEnrollmentSchema.parse(req.body);
     const enrollment = await prisma.enrollments.create({ data });
