@@ -29,7 +29,7 @@ export function AnnouncementCard({ item }: { item: Announcement }) {
       <p className="mt-2 text-sm text-gray-600">{item.content}</p>
 
       <div className="mt-4 border-t pt-3 text-xs text-gray-500">
-        Tanggal: {formatDate(item.created_at)}
+        Tanggal: {formatDate(item.date)}
       </div>
     </div>
   );

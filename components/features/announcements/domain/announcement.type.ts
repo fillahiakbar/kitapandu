@@ -5,8 +5,8 @@ export interface Announcement {
   title: string;
   category: AnnouncementCategory;
   content: string;
-  created_at: string;
-  updated_at: string;
+  date: string;
+  label: string;
 }
 
 export interface Pagination {

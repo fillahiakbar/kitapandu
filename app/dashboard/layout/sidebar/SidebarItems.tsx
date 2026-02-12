@@ -24,12 +24,11 @@ const renderMenuItems = (items: any, pathDirect: any) => {
 
     if (item.subheader) {
       // Display Subheader
-      return (
-        <Menu
-          subHeading={item.subheader}
-          key={item.subheader}
-        />
-      );
+return (
+  <Typography key={item.subheader} px={3} py={1} fontSize={12} fontWeight={600}>
+    {item.subheader}
+  </Typography>
+);
     }
 
     //If the item has children (submenu)
@@ -75,7 +74,7 @@ const SidebarItems = () => {
     < >
       <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#5D87FF"} themeSecondaryColor={'#49beff'} >
 
-        <Logo img='/assets/images/logo.png' component={Link} to="/" >Modernize</Logo>
+        <Logo img='/assets/images/logo.png' component={Link} href="/" >Modernize</Logo>
 
         {renderMenuItems(Menuitems, pathDirect)}
         <Box px={2}>
